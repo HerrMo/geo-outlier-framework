@@ -13,3 +13,4 @@ The authors have declared no conflicts of interest for this article.
 
 \section*{Data availability statement}
 The data and code to reproduce the findings of this study are openly available on GitHub at: 
+\url{https://github.com/HerrMo/geo-outlier-framework}

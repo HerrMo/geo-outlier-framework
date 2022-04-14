@@ -542,7 +542,7 @@ Detecting atypical observations that deviate substantially from the bulk of the 
 intrusion detection (\protect\hyperlink{ref-zhang2006anomaly}{Zhang \& Zulkernine, 2006}), medical imaging (\protect\hyperlink{ref-fritsch2012detecting}{Fritsch et al., 2012}), or network analysis (\protect\hyperlink{ref-azcorra2018unsupervised}{Azcorra et al., 2018}).
 The most common terms for this task are \emph{outlier} or \emph{anomaly detection}, but
 many different terms are used (\protect\hyperlink{ref-zimek2018there}{Zimek \& Filzmoser, 2018}). Although there is a
-vast amount of literature on the topic, there is neither a commonly accepted, precise definition of what exactly constitutes outliers or anomalies, nor agreement on whether these two terms are synonymous. As Unwin (\protect\hyperlink{ref-unwin2019multivariate}{2019, p. 1}) puts it:
+vast amount of literature on the topic, there is neither a commonly accepted, precise definition of what exactly constitutes outliers or anomalies, nor agreement on whether these two terms are synonymous. As Unwin (\protect\hyperlink{ref-unwin2019multivariate}{2019, p. 635}) puts it:
 
 \begin{quote}
 ``Outliers are a complicated business. It is difficult to define what they are, it is
@@ -577,7 +577,7 @@ Our framework is fully general and does not rely on a specific combination of ma
 \subsection{Background and related work}\label{sec:prelims:background}}
 
 The fundamental assumption of manifold learning is that the high-dimensional data observed in a \(\obsdim\)-dimensional space \(\hdspace\) actually lie on a \(d\)-dimensional manifold \(\mani \subset \hdspace\) with \(d < \obsdim\). Manifold learning methods yield an \emph{embedding} function \(e:\hdspace \to \embedspace\) from the high-dimensional data space to a low-dimensional embedding space \(\embedspace\) such that the configuration of embedded data reflects the characteristics of \(\M\). The terms manifold learning and nonlinear dimension reduction are often used interchangeably (\protect\hyperlink{ref-lee2007nonlinear}{Lee \& Verleysen, 2007}; \protect\hyperlink{ref-ma2011manifold}{Ma \& Fu, 2011}).
-Typically, the fundamental step is to compute distances between the high-dimensional observations. Methods based on this approach are, for example, Multidimensional Scaling (MDS) (\protect\hyperlink{ref-cox2008multidimensional}{Cox \& Cox, 2008}), Isomap (\protect\hyperlink{ref-tenenbaum2000global}{Tenenbaum et al., 2000}), diffusion maps (\protect\hyperlink{ref-coifman2006diffusion}{Coifman \& Lafon, 2006}), local linear embeddings (\protect\hyperlink{ref-roweis2000nonlinear}{Roweis \& Saul, 2000}), Laplacian eigenmaps (\protect\hyperlink{ref-belkin2003laplacian}{Belkin \& Niyogi, 2003}), t-distributed stochastic neighborhood embeddings (t-SNE) (\protect\hyperlink{ref-maaten2008visualizing}{Maaten \& Hinton, 2008}), and uniform manifold approximation and projection (UMAP) (\protect\hyperlink{ref-mcinnes2020umap}{McInnes et al., 2020}), to name only a few. The methods differ in how they infer the manifold structure from these distances and how they obtain low-dimensional embedding vectors from these.\\
+Typically, the fundamental step is to compute distances between the high-dimensional observations. Methods based on this approach are, for example, Multidimensional Scaling (MDS) (\protect\hyperlink{ref-cox2008multidimensional}{Cox \& Cox, 2008}), Isomap (\protect\hyperlink{ref-tenenbaum2000global}{Tenenbaum et al., 2000}), diffusion maps (\protect\hyperlink{ref-coifman2006diffusion}{Coifman \& Lafon, 2006}), local linear embeddings (\protect\hyperlink{ref-roweis2000nonlinear}{Roweis \& Saul, 2000}), Laplacian eigenmaps (\protect\hyperlink{ref-belkin2003laplacian}{Belkin \& Niyogi, 2003}), t-distributed stochastic neighborhood embeddings (t-SNE) (\protect\hyperlink{ref-maaten2008visualizing}{Maaten \& Hinton, 2008}), and uniform manifold approximation and projection (UMAP) (\protect\hyperlink{ref-mcinnes2018umap}{McInnes et al., 2018}), to name only a few. The methods differ in how they infer the manifold structure from these distances and how they obtain low-dimensional embedding vectors from these.\\
 Despite their promising results in other settings, manifold learning methods have not found application for outlier detection to a significant extent so far. Kandanaarachchi \& Hyndman (\protect\hyperlink{ref-kandanaarachchi2020dimension}{2020}) defined an outlier detection method explicitly based on dimension reduction, while Pang et al. (\protect\hyperlink{ref-pang2018learning}{2018}) make use of ranking model-based representation learning. However, they do not provide a general conceptual framework and focus on tabular data. For functional data, Xie et al. (\protect\hyperlink{ref-xie2017geometric}{2017}) introduced a geometric approach that decomposes functional observations into amplitude, phase and shift components in order to identify specific types of outliers. However, the approach is only applicable to functional data and does not make use of the intrinsic structure of the functional observations from a manifold learning perspective. Ali et al. (\protect\hyperlink{ref-ali2019timecluster}{2019}) analyze time series data using 2\(\vizdim\)-embeddings obtained from manifold methods for outlier detection and clustering and Toivola et al. (\protect\hyperlink{ref-toivola2010novelty}{2010}) compare specific dimensionality reduction techniques for outlier detection in structural health monitoring, but both focus on practical considerations and do not provide a theoretical underpinning. Another line of work focuses on projection-based outlier detection, for example for high-dimensional Gaussian data (\protect\hyperlink{ref-navarro2021high}{Navarro-Esteban \& Cuesta-Albertos, 2021}), financial time series (\protect\hyperlink{ref-loperfido2020kurtosis}{Loperfido, 2020}), or functional data (\protect\hyperlink{ref-ren2017projection}{Ren et al., 2017}).
 
 \hypertarget{sec:framework}{%
@@ -587,7 +587,7 @@ The framework we propose generalizes an approach for outlier detection in functi
 Since the approach exploits the metric structure of a functional data set,
 it is straightforward to generalize it to other data types, both from a theoretical as well as a practical perspective. Theoretically, the observation space needs to be a metric space, i.e.~it needs to be equipped with a metric. Practically, there only needs to be a suitable distance measure to compute pairwise distances between observations.
 Two assumptions are fundamental for the framework. First of all, the \emph{manifold assumption} that observed high-dimensional data lie on or close to a (low dimensional) manifold.
-Note that functional data typically contain a lot of structure, and it is often reasonable to assume that only few modes of variation suffice to describe most of the information contained in the data, i.e., such functional data often have low intrinsic dimension, at least approximately, see Figure \ref{fig:outtypes} for a simple synthetic example. Similar remarks hold for other data types such as image data (\protect\hyperlink{ref-lee2007nonlinear}{Lee \& Verleysen, 2007}; \protect\hyperlink{ref-ma2011manifold}{Ma \& Fu, 2011}). Secondly, it is assumed that outliers are either \emph{structural outliers} -- or in the terminology of Zimek and Filzmoser (\protect\hyperlink{ref-zimek2018there}{2018, p. 6}) ``real outliers'' stemming from a different data generating process than the bulk of the data -- or \emph{distributional} outliers, observations that are structurally similar to the main data but still appear outlying in some sense. We make these notions mathematically precise in the remainder of this section based on the exposition in Herrmann \& Scheipl (\protect\hyperlink{ref-herrmann2021geometric}{2021}) before we demonstrate the practical relevance of the framework in section \ref{sec:exps} and summarize its general conceptual implications in section \ref{sec:discussion}.\\
+Note that functional data typically contain a lot of structure, and it is often reasonable to assume that only few modes of variation suffice to describe most of the information contained in the data, i.e., such functional data often have low intrinsic dimension, at least approximately, see Figure \ref{fig:outtypes} for a simple synthetic example. Similar remarks hold for other data types such as image data (\protect\hyperlink{ref-lee2007nonlinear}{Lee \& Verleysen, 2007}; \protect\hyperlink{ref-ma2011manifold}{Ma \& Fu, 2011}). Secondly, it is assumed that outliers are either \emph{structural outliers} -- or in the terminology of Zimek and Filzmoser (\protect\hyperlink{ref-zimek2018there}{2018, p. 10}) ``real outliers'' stemming from a different data generating process than the bulk of the data -- or \emph{distributional} outliers, observations that are structurally similar to the main data but still appear outlying in some sense. We make these notions mathematically precise in the remainder of this section based on the exposition in Herrmann \& Scheipl (\protect\hyperlink{ref-herrmann2021geometric}{2021}) before we demonstrate the practical relevance of the framework in section \ref{sec:exps} and summarize its general conceptual implications in section \ref{sec:discussion}.\\
 Given a high-dimensional observation space \(\hdspace\) of dimension \(\obsdim\), a \(d\)-dimensional parameter space \(\pspace \subset \mathbb{R}^d\), such that the elements \(\theta_i \in \pspace\) are realizations of the probability distribution \(P\) over the domain \(\mathbb{R}^d\), i.e., \(\theta_i \sim P\), and given an embedding space \(\embedspace \subset \mathbb{R}^{d'}\), define the mappings \(\phi\) and \(e\) so that
 \[\Theta \stackrel{\phi}{\to} \mathcal{\mani_{\hdspace}} \stackrel{e}{\to} \mathcal{Y},\]
 with \(\mani_{\hdspace} \subset \hdspace\) a manifold in the observation space. The structure of \(\mani_{\hdspace}\) is determined by the structure and dimensionality of \(\pspace\), \(P\) and the map \(\phi\), which is isometric for the appropriate metrics in \(\pspace\) and \(\hdspace\).
@@ -624,7 +624,7 @@ Figure \ref{fig:outtypes} shows examples of three data types with structural out
 Summarizing the framework's crucial aspects in less technical terms, we assume that the bulk of the observations comes from a single ``common'' process, which generates observations in some subspace \(\Min\), while some data might come from an ``anomalous'' process, which defines structurally distinct observations in a different subspace \(\Man\). This follows standard notions in outlier detection which often assume (at least) two different data-generating processes (\protect\hyperlink{ref-dai2020functional}{Dai et al., 2020}; \protect\hyperlink{ref-zimek2018there}{Zimek \& Filzmoser, 2018}). Note that this does not imply that structural outliers are in any way similar to each other: \(\Pan\) could be very widely dispersed or arise from a mixture or several different distributions and/or \(\Man\) could consist of several unconnected components representing various kinds of structural abnormality. The only crucial aspect is that the process from which \emph{most} of the observations emerge yields structurally similar data.
 We consider settings with a structural outlier ratio \(r \in [0, 0.1]\) to be suitable for outlier detection. The proportion of \emph{distributional} outliers on \(\Min\), in contrast, depends only on the \(\alpha\)-level for \(\Omega^*_{\alpha, \Pin}\).
 Practically speaking, neither prior knowledge about these manifolds nor specific assumptions about structural differences are necessary in our approach.
-The key points are that 1) structural outliers are not on the main data manifold \(\Min\), 2) distributional outliers are at the edges of \(\Min\), and 3) these properties are preserved in the embedding vectors as long as the embedding is based on an appropriate notion of distance in \(\hdspace\).\\
+The key points are that 1) structural outliers are not on the main data manifold \(\Min\), 2) distributional outliers are at the edges of \(\Min\), and 3) these properties are preserved in the embedding vectors as long as the embedding is based on an appropriate notion of distance in \(\hdspace\).
 
 \section{Experiments}\label{sec:exps}
 
@@ -681,7 +681,6 @@ Since the inlier data are images of a rotated object, \(\Min\) is the image of a
 \end{figure}
 
 The 2\(\vizdim\) embedding reflects the expected structure of our COIL20 subset very well, with clear separation of the \(7\) pictures of the toy car as structural outliers. In addition, the embedding of \(\Min\) indeed yields a closed, but not quite circular loop, as does the embedding of the 7 rotated images from \(\Man\). The corresponding 3D embedding (not shown) reveals that the embeddings of the inliers lie on a rough circle folded over itself.
-\\
 In summary, in the ECG example there seem to be no clearly separable, structurally different outliers which could be detected with tMDS, but only distributional outliers, whereas in the COIL data there are clearly separate structural outliers, but no distributionally outlying observations. These two examples with very different intrinsic structures (single connected manifold with distributional outliers versus disconnected manifolds without clear distributional outliers) illustrate that it is not necessary to have explicit prior knowledge about the data generating process or its outlier characteristics for the approach to work and that it is able to handle different data manifold structures flexibly and successfully.
 
 \subsubsection{Demonstrating generalizability on graph and curve data}
@@ -698,11 +697,9 @@ We simulate two structurally different classes of Erd\H{o}s-Rényi graphs with 2
 
 The curves data (Fig. \ref{fig:further-qual-exp} B) consists of spiral curve drawings from an Archimedes spiral-drawing test that is used to diagnose patients with Parkinson's disease (\protect\hyperlink{ref-alty2017use}{Alty et al., 2017}; \protect\hyperlink{ref-steyer2021elastic}{Steyer et al., 2021}). Taking data from the dynamic version of the test (\protect\hyperlink{ref-isenkul2014improved}{Isenkul et al., 2014}), we use 15 curves drawn by healthy controls not suffering from Parkinson's disease and two curves drawn by Parkinson patients to represent potential structural outliers, where each curve is evaluated on 200 points. Previous investigations have shown that an elastic shape distance is better suited than \(L_2\) distances to discriminate between the two groups (\protect\hyperlink{ref-steyer2021elastic}{Steyer et al., 2021}).\\
 So, in contrast to the previous examples, we use more specialized distance measures to capture the relevant structures in these settings. This illustrates that the approach is not only flexible with respect to the actual structure present in a given data set as demonstrated in the previous section, but that it is also very generally applicable to a variety of data types. The approach can be used for any kind of data simply by defining an appropriate (data-specific) distance measure.
-\\
 In both the embeddings of the graphs as well as the embeddings of the curves, structurally different observations (in red) are clearly separated from the observations on \(\Min\). This is also reflected by their LOF scores. Moreover, in both settings there are observations from \(\Min\) (in blue) which appear in peripheral, sparser regions of the ``normal'' data and thus can be considered distributional outliers.
-Note that it is not always immediately obvious on the level of the original data why observations appear distributionally outlying. For example, in the graph data, note that other than in previous examples (e.g.~Fig. \ref{fig:exps-sim} A) comparing them to a few inliers does not reveal striking difference on the first glance (in contrast to the structural outliers!): Figure \ref{fig:further-qual-exp} A, left column, shows six inlier graphs in the 1st and 2nd row, the three distributional outlier graphs in the 3rd row, and three structural outlier graphs in the 4th row.\\
-Nevertheless, the embedding and LOF ranks indicate that the distributional outlying observations have by chance obtained some (within the inliers) specific characteristics. Further analysis of the graphs reveals, for example, that the one with rank 11 yields the node with maximum connectedness within all inlier graphs. This node has a degree of 8 (i.e., it is connected to 8 other nodes), while the maximum degree in the graphs on \(\Min\) is 4.39 on average. In contrast, the graph with rank 13 yields 8 nodes with not a single connection (i.e.~degree 0). On average, there are 2.74 nodes with no connections in the graphs on \(\Min\).
-Finally, the respective values of the graph with rank 10 are above the upper quartile for both of these aspects. It has 4 unnconnected nodes and at the same time a maximally connected node with degree 6.
+Note that it is not always immediately obvious on the level of the original data why observations appear distributionally outlying. For example, in the graph data, note that other than in previous examples (e.g.~Fig. \ref{fig:exps-sim} A) comparing them to a few inliers does not reveal striking difference at first (in contrast to the structural outliers!): Figure \ref{fig:further-qual-exp} A, left column, shows six inlier graphs in the 1st and 2nd row, the three distributional outlier graphs in the 3rd row, and three structural outlier graphs in the 4th row.\\
+Nevertheless, the embedding vectors and their LOF ranks indicate that the distributionally outlying observations have obtained some specific characteristics setting them apart from most inlying observations. For example, further analysis reveals that the graph with LOF rank 11 contains the node with maximum connectedness of all nodes in all inlier graphs. Its degree is 8 (i.e., it is directly connected to 8 other nodes), while the average of the maximum degree in the graphs on \(\Min\) is just 4.39. In contrast, the graph with LOF rank 13 contains 8 isolated nodes of degree 0, while the average number of nodes with with degree 0 is only 2.47 on \(\Min\). The respective values of the graph with LOF rank 10 are above the upper quartile for both of these metrics, with 4 unconnected nodes and a maximally connected node with degree 6.
 
 \hypertarget{quantitative-assessment}{%
 \subsection{\texorpdfstring{Quantitative assessment \label{sec:exps:quant}}{Quantitative assessment }}\label{quantitative-assessment}}
@@ -741,11 +738,11 @@ We propose a geometrically motivated framework for outlier detection, which expl
 \hypertarget{sec:disc:implications}{%
 \subsection{Implications}\label{sec:disc:implications}}
 
-\textbf{Outlier taxonomy} We propose a clear taxonomy to distinguish between frequently interchangeably used terms \emph{anomalies} and \emph{outliers} in a canonical way: we regard \emph{anomalies} as observations from a different data generating process than the majority of the data (i.e.~as observations that are on \(\Man\) but not on \(\Min\)), which can be more precisely identified as \emph{structural} outliers. Recall that Zimek and Filzmoser (\protect\hyperlink{ref-zimek2018there}{2018}) refer to such observations as ``real'' outliers. On the other hand, regarding \emph{outliers} as observations from low density regions of the underlying ``normal'' data manifold \(\Min\), they can be more precisely identified as \emph{distributional} outliers.
+\textbf{Outlier taxonomy} We propose a clear taxonomy to distinguish between frequently interchangeably used terms \emph{anomalies} and \emph{outliers} in a canonical way: we regard \emph{anomalies} as observations from a different data generating process than the majority of the data (i.e.~as observations that are on \(\Man\) but not on \(\Min\)), which can be more precisely identified as \emph{structural} outliers. Recall that Zimek and Filzmoser (\protect\hyperlink{ref-zimek2018there}{2018, p. 10}) refer to such observations as ``real'' outliers that need to be distinguished from ``observations which are in the extremes of the model distribution''. On the other hand, regarding \emph{outliers} as observations from low density regions of the underlying ``normal'' data manifold \(\Min\), they can be more precisely identified as \emph{distributional} outliers.
 Based on our reading of the literature, this distinction is usually not made explicit. Since there is rarely a practical reason to assume that a given data set contains only \textit{distributional} or only \textit{structural} outliers, some of the confusion surrounding the topic (\protect\hyperlink{ref-goldstein2016comparative}{Goldstein \& Uchida, 2016}; \protect\hyperlink{ref-unwin2019multivariate}{Unwin, 2019}; \protect\hyperlink{ref-zimek2018there}{Zimek \& Filzmoser, 2018}) might be due to the fact that such conceptual differences have not been made sufficiently clear.
 As outlined, the concept of structural difference is very general. For example, structural differences in functional data may appear as shape anomalies in data mainly characterized by vertical shift variation (see Fig. \ref{fig:outtypes} A) or as vertical shift anomalies in data dominated by shape variation, as phase anomalies in data with magnitude variation or magnitude anomalies in data with phase variation, etc.\\
 In real unlabeled data, there may not always be a clear distinction between somewhat structurally anomalous observations with ``off-manifold'' embeddings and merely distributionally outlying observations with embeddings on the periphery of the data manifold, as in the ECG data in Figure \ref{fig:fda-image-real} A. Nevertheless, the theoretical distinction between these two kinds of outliers adds conceptual clarity even if the practical application of the categories may not be straightforward.\\
-\textbf{Curse of dimensionality} As outlined in section \ref{sec:prelims:scope}, outlier detection is often reported to suffer from the curse of dimensionality. For example, Goldstein \& Uchida (\protect\hyperlink{ref-goldstein2016comparative}{2016}) show that most outlier detection methods under consideration break down or perform poorly in a data set with 400 dimensions and conclude that unsupervised outlier detection is not possible in such high dimensions. Some {[}Aggarwal (\protect\hyperlink{ref-aggarwal2017outlier}{2017}); e.g.{]} attribute this to the fundamental problem that distance functions can lose their discriminating power in high dimensions (\protect\hyperlink{ref-beyer1999nearest}{Beyer et al., 1999}), which is linked to the the concentration of measure effect (\protect\hyperlink{ref-pestov2000geometry}{Pestov, 2000}). However, this effect occurs only under fairly specific conditions (\protect\hyperlink{ref-zimek2012survey}{Zimek et al., 2012}), which means that outlier detection does not have to be affected by the curse of dimensionality: In addition to the effects of dependency structures and signal-to-noise ratios (\protect\hyperlink{ref-zimek2012survey}{Zimek et al., 2012}), the necessary conditions for concentration of measure are not fulfilled if the intrinsic dimensionality of the data is smaller than the actually observed dimensionality, or if the data is distributed in clusters that are relatively well separable (\protect\hyperlink{ref-beyer1999nearest}{Beyer et al., 1999}). Exactly these two characteristics are reflected in our framework in the form of (1) the manifold assumption, which implies low-ish intrinsic dimensionality, and (2) the assumption that structural outliers come from different manifolds than the rest of the data, i.e., from different ``clusters'' in \(\hdspace\). This has two important consequences: First of all, the geometric perspective our framework is based on makes these important aspects for outlier detection in high-dimensional data explicit, while a purely probabilistic perspective obscures them. Secondly, it mitigates many of the problems associated with high-dimensional outlier detection: any outlier detection method that performs well in low dimensions becomes -- in principle -- applicable in nominally high-dimensional and/or complex non-tabular data when applied to suitable low dimensional embedding coordinates.\\
+\textbf{Curse of dimensionality} As outlined in section \ref{sec:prelims:scope}, outlier detection is often reported to suffer from the curse of dimensionality. For example, Goldstein \& Uchida (\protect\hyperlink{ref-goldstein2016comparative}{2016}) show that most outlier detection methods under consideration break down or perform poorly in a data set with 400 dimensions and conclude that unsupervised outlier detection is not possible in such high dimensions. Some {[}Aggarwal (\protect\hyperlink{ref-aggarwal2017outlier}{2017}); e.g.{]} attribute this to the fundamental problem that distance functions can lose their discriminating power in high dimensions (\protect\hyperlink{ref-beyer1999nearest}{Beyer et al., 1999}), which is linked to the the concentration of measure effect (\protect\hyperlink{ref-pestov2000geometry}{Pestov, 2000}). However, this effect occurs only under fairly specific conditions (\protect\hyperlink{ref-zimek2012survey}{Zimek et al., 2012}), which means that outlier detection does not have to be affected by the curse of dimensionality: In addition to the effects of dependency structures and signal-to-noise ratios (\protect\hyperlink{ref-zimek2012survey}{Zimek et al., 2012}), the necessary conditions for concentration of measure are not fulfilled if the intrinsic dimensionality of the data is smaller than the actually observed dimensionality, or if the data is distributed in clusters that are relatively well separable (\protect\hyperlink{ref-beyer1999nearest}{Beyer et al., 1999}). Exactly these two characteristics are reflected in our framework in the form of (1) the manifold assumption, which implies low-ish intrinsic dimensionality, and (2) the assumption that structural outliers come from different manifolds than the rest of the data, i.e., from different ``clusters'' in \(\hdspace\). This has two important consequences: First of all, the geometric perspective our framework is based on makes these important aspects for outlier detection in high-dimensional data explicit, while a purely probabilistic perspective obscures them. Secondly, it mitigates many of the problems associated with high-dimensional outlier detection: any outlier detection method that performs well in low dimensions becomes -- in principle -- applicable in nominally high-dimensional and/or complex non-tabular data when applied to suitable low dimensional embedding coordinates.
 In addition, our results show that outlier sub-structure, specifically the differences between distributional and structural outliers, can be detected and visualized with manifold methods. This opens new possibilities for descriptive and exploratory analyses:\\
 \textbf{Visualizability of outlier characteristics} If the embeddings provided by manifold methods are restricted to two or three dimensions, they also provide easily accessible visualizations of the data. In fact, manifold learning is often used in applications specifically to find two- or three-dimensional visualizations reflecting the essential intrinsic structure of the high-dimensional data as faithfully as possible. Consequently, structural and distributional outliers, which are rather glaring data characteristics if the manifolds are well separable, can often be separated clearly even in two or three dimensional representations as long as the embedding is (approximately) isometric with respect to a suitable dissimilarity measure. This is specifically important for complex non-tabular or high-dimensional data types such images or graphs where at most a few observations can be visualized and perceived simultaneously. In the same vein, substructures and notions of data depth are reflected in the embeddings, making the approach also useful as an exploration tool for settings with unclear structure.\\
 \textbf{Generalizability} Since the central building block of the proposed framework is to capture the metric structure of data sets using distance measures, the framework is very general and applicable to any data types for which distance metrics are available. In Section \ref{sec:exps:qual}, we illustrated this generalizability using high-dimensional as well as non-tabular data; in particular we applied it to functional, curve, graph, and image data. This also makes the framework very flexible as one can make use of non-standard and customized dissimilarity measures to emphasize the relevant structural differences in specific situations based on domain knowledge: Representing image data as vectors of pixel intensities, we computed distances between those vectors, for example. Dissimilarities between different graphs were captured, for example, by constructing their graph Laplacians and computing Frobenius distances between them, and we used a specific elastic depth distance for the spiral curve data as suggested by earlier results in Steyer et al. (\protect\hyperlink{ref-steyer2021elastic}{2021}).
@@ -753,7 +750,7 @@ In addition, our results show that outlier sub-structure, specifically the diffe
 \hypertarget{sec:discussion:limitations}{%
 \subsection{Limitations and outlook}\label{sec:discussion:limitations}}
 
-Inliers, i.e.~observations on \(\Min\), may show large ``within class'' variation and/or may be spread over several disconnected clusters in some situations. For example, object images on \(\Min\), which are structurally similar in terms of the depicted objects' shape, may vary in rotation, scale, or location, and may have different color or texture. In functional data, observations on \(\Min\) may show phase and amplitude variation and form clusters due to different shapes. In such settings, \(\Min\) can yield complex substructure and highly dispersed observations. In such cases, the dispersion of \(\Min\) accounts for large parts of the data's variability and two or three dimensional MDS embeddings may not be sufficient to also faithfully represent structural outliers, since MDS embedding vectors are sorted decreasingly by explained ``variance''. However, this does not mean that structural outliers are not necessarily separable. Instead, they appear as outliers in higher embedding dimensions, requiring higher order embeddings to reflect the outlier structure. To some extent, scatterplot matrices visualizing the embedding dimensions of such higher order embeddings in a pairwise manner can be used for visualization in such situations (\protect\hyperlink{ref-herrmann2021geometric}{Herrmann \& Scheipl, 2021}). In other settings, however, techniques from multi-view learning such as ``distance-learning from multiple views'' may likely yield better results, because different structures (e.g.~structure induced by color vs structure induced by texture) should be ``treated separately as they are \emph{semantically} different'' (\protect\hyperlink{ref-zimek2015blind}{Zimek \& Vreeken, 2015, p. 128}). Note, however, that suitable inductive biases can also be brought to bear in our framework fairly easily. If substantial considerations suggest that specific structural aspects are important, specifying dissimilarity metrics focused on these aspects allows to emphasize the relevant differences. For example, if isolated outliers in functional data (i.e.~functions which yield outlying behavior only over small parts of the domain such as isolated peaks) are of most interest, higher order \(L_p\) metrics such as \(L_{10}\) will be much more sensitive to such structural differences than general \(L_2\) distances. If phase variation should be ignored, unnormalized \(L_1\)-Wasserstein distances or DTW distance can be used. Such problem-specific distance measures can reduce the number of MDS embedding dimensions necessary for faithful embeddings of structural outliers (\protect\hyperlink{ref-herrmann2021geometric}{Herrmann \& Scheipl, 2021}). In future work, we will investigate these aspects and possible extensions w.r.t. to multi-view learning approaches. Moreover, we will elaborate more on the specifics of other data types, in particular, image data.
+Inliers, i.e.~observations on \(\Min\), may show large ``within class'' variation and/or may be spread over several disconnected clusters in some situations. For example, object images on \(\Min\), which are structurally similar in terms of the depicted objects' shape, may vary in rotation, scale, or location, and may have different color or texture. In functional data, observations on \(\Min\) may show phase and amplitude variation and form clusters due to different shapes. In such settings, \(\Min\) can yield complex substructure and highly dispersed observations and it may be hard to distinguish whether separable structures observed in embeddings are due to groups of homogeneous structural outliers or due to multimodality in \(\Min\) in which some modes are sparsely sampled. Moreover, in such cases, the dispersion of \(\Min\) accounts for large parts of the data's variability and two or three dimensional MDS embeddings may not be sufficient to also faithfully represent structural outliers, since MDS embedding vectors are sorted decreasingly by explained ``variance''. However, this does not mean that structural outliers are not necessarily separable. Instead, they appear as outliers in higher embedding dimensions, requiring higher order embeddings to reflect the outlier structure. To some extent, scatterplot matrices visualizing the embedding dimensions of such higher order embeddings in a pairwise manner can be used for visualization in such situations (\protect\hyperlink{ref-herrmann2021geometric}{Herrmann \& Scheipl, 2021}). In other settings, however, techniques from multi-view learning such as ``distance-learning from multiple views'' may likely yield better results, because different structures (e.g.~structure induced by color vs structure induced by texture) should be ``treated separately as they are \emph{semantically} different'' (\protect\hyperlink{ref-zimek2015blind}{Zimek \& Vreeken, 2015, p. 128}). Note, however, that suitable inductive biases can also be brought to bear in our framework fairly easily. If substantial considerations suggest that specific structural aspects are important, specifying dissimilarity metrics focused on these aspects allows to emphasize the relevant differences. For example, if isolated outliers in functional data (i.e.~functions which yield outlying behavior only over small parts of the domain such as isolated peaks) are of most interest, higher order \(L_p\) metrics such as \(L_{10}\) will be much more sensitive to such structural differences than general \(L_2\) distances. If phase variation should be ignored, the unnormalized \(L_1\)-Wasserstein or the Dynamic Time Warping (DTW) distance can be used. Such problem-specific distance measures can reduce the number of MDS embedding dimensions necessary for faithful embeddings of structural outliers (\protect\hyperlink{ref-herrmann2021geometric}{Herrmann \& Scheipl, 2021}). In future work, we will investigate these aspects and possible extensions w.r.t. to multi-view learning approaches. Moreover, we will elaborate more on the specifics of other data types, in particular, image data.
 
 \hypertarget{sec:conclusion}{%
 \section{Conclusion}\label{sec:conclusion}}
@@ -775,173 +772,187 @@ The authors have declared no conflicts of interest for this article.
 \section*{Data availability statement}
 
 The data and code to reproduce the findings of this study are openly available on GitHub at:
+\url{https://github.com/HerrMo/geo-outlier-framework}
 
 \section*{References}
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
 \leavevmode\vadjust pre{\hypertarget{ref-aggarwal2017outlier}{}}%
-Aggarwal, C. C. (2017). \emph{Outlier analysis}.
+Aggarwal, C. C. (2017). \emph{Outlier analysis} (2nd ed.). Springer. \url{https://doi.org/10.1007/978-3-319-47578-3}
 
 \leavevmode\vadjust pre{\hypertarget{ref-aggarwal2001outlier}{}}%
-Aggarwal, C. C., \& Yu, P. S. (2001). Outlier detection for high dimensional data. \emph{Proceedings of the 2001 ACM SIGMOD International Conference on Management of Data}, 37--46.
+Aggarwal, C. C., \& Yu, P. S. (2001). Outlier detection for high dimensional data. \emph{SIGMOD Rec.}, \emph{30}(2), 37--46. \url{https://doi.org/10.1145/376284.375668}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ali2019timecluster}{}}%
-Ali, M., Jones, M. W., Xie, X., \& Williams, M. (2019). Time{C}luster: Dimension reduction applied to temporal data for visual analytics. \emph{The Visual Computer}, \emph{35}(6), 1013--1026.
+Ali, M., Jones, M. W., Xie, X., \& Williams, M. (2019). Time{C}luster: Dimension reduction applied to temporal data for visual analytics. \emph{The Visual Computer}, \emph{35}(6), 1013--1026. \url{https://doi.org/10.1007/s00371-019-01673-y}
 
 \leavevmode\vadjust pre{\hypertarget{ref-alty2017use}{}}%
-Alty, J., Cosgrove, J., Thorpe, D., \& Kempster, P. (2017). How to use pen and paper tasks to aid tremor diagnosis in the clinic. In \emph{Practical Neurology} (No. 6; Vol. 17, pp. 456--463). BMJ Publishing Group Ltd.
+Alty, J., Cosgrove, J., Thorpe, D., \& Kempster, P. (2017). How to use pen and paper tasks to aid tremor diagnosis in the clinic. \emph{Practical Neurology}, \emph{17}(6), 456--463. \url{https://doi.org/10.1136/practneurol-2017-001719}
 
 \leavevmode\vadjust pre{\hypertarget{ref-azcorra2018unsupervised}{}}%
-Azcorra, A., Chiroque, L. F., Cuevas, R., Anta, A. F., Laniado, H., Lillo, R. E., Romo, J., \& Sguera, C. (2018). Unsupervised scalable statistical method for identifying influential users in online social networks. \emph{Scientific Reports}, \emph{8}(1), 1--7.
+Azcorra, A., Chiroque, L. F., Cuevas, R., Anta, A. F., Laniado, H., Lillo, R. E., Romo, J., \& Sguera, C. (2018). Unsupervised scalable statistical method for identifying influential users in online social networks. \emph{Scientific Reports}, \emph{8}(1), 1--7. \url{https://doi.org/10.1038/s41598-018-24874-2}
 
 \leavevmode\vadjust pre{\hypertarget{ref-belkin2003laplacian}{}}%
-Belkin, M., \& Niyogi, P. (2003). Laplacian eigenmaps for dimensionality reduction and data representation. \emph{Neural Computation}, \emph{15}(6), 1373--1396.
+Belkin, M., \& Niyogi, P. (2003). Laplacian eigenmaps for dimensionality reduction and data representation. \emph{Neural Computation}, \emph{15}(6), 1373--1396. \url{https://doi.org/10.1162/089976603321780317}
 
 \leavevmode\vadjust pre{\hypertarget{ref-beyer1999nearest}{}}%
-Beyer, K., Goldstein, J., Ramakrishnan, R., \& Shaft, U. (1999). When is {``nearest neighbor''} meaningful? \emph{International Conference on Database Theory}, 217--235.
+Beyer, K., Goldstein, J., Ramakrishnan, R., \& Shaft, U. (1999). When is {``nearest neighbor''} meaningful? In C. Beeri \& P. Buneman (Eds.), \emph{Database theory --- ICDT'99} (pp. 217--235). Springer Berlin Heidelberg. \url{https://doi.org/10.1007/3-540-49257-7_15}
 
 \leavevmode\vadjust pre{\hypertarget{ref-breunig2000lof}{}}%
-Breunig, M. M., Kriegel, H.-P., Ng, R. T., \& Sander, J. (2000). {LOF}: Identifying density-based local outliers. \emph{Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data}, 93--104.
+Breunig, M. M., Kriegel, H.-P., Ng, R. T., \& Sander, J. (2000). {LOF}: Identifying density-based local outliers. \emph{SIGMOD Rec.}, \emph{29}(2), 93--104. \url{https://doi.org/10.1145/335191.335388}
 
 \leavevmode\vadjust pre{\hypertarget{ref-campos2016evaluation}{}}%
-Campos, G. O., Zimek, A., Sander, J., Campello, R. J., Micenková, B., Schubert, E., Assent, I., \& Houle, M. E. (2016). On the evaluation of unsupervised outlier detection: Measures, datasets, and an empirical study. \emph{Data Mining and Knowledge Discovery}, \emph{30}(4), 891--927.
+Campos, G. O., Zimek, A., Sander, J., Campello, R. J., Micenková, B., Schubert, E., Assent, I., \& Houle, M. E. (2016). On the evaluation of unsupervised outlier detection: Measures, datasets, and an empirical study. \emph{Data Mining and Knowledge Discovery}, \emph{30}(4), 891--927. \url{https://doi.org/10.1007/s10618-015-0444-8}
 
 \leavevmode\vadjust pre{\hypertarget{ref-clemenccon2013scoring}{}}%
-Clémençon, S., \& Jakubowicz, J. (2013). Scoring anomalies: A {M}-estimation formulation. \emph{Artificial Intelligence and Statistics}, 659--667.
+Clémençon, S., \& Jakubowicz, J. (2013). Scoring anomalies: A {M}-estimation formulation. In C. M. Carvalho \& P. Ravikumar (Eds.), \emph{Proceedings of the sixteenth international conference on artificial intelligence and statistics} (Vol. 31, pp. 659--667). PMLR. \url{https://proceedings.mlr.press/v31/clemencon13a.html}
 
 \leavevmode\vadjust pre{\hypertarget{ref-coifman2006diffusion}{}}%
-Coifman, R. R., \& Lafon, S. (2006). Diffusion maps. \emph{Applied and Computational Harmonic Analysis}, \emph{21}(1), 5--30.
+Coifman, R. R., \& Lafon, S. (2006). Diffusion maps. \emph{Applied and Computational Harmonic Analysis}, \emph{21}(1), 5--30. \url{https://doi.org/10.1016/j.acha.2006.04.006}
 
 \leavevmode\vadjust pre{\hypertarget{ref-cox2008multidimensional}{}}%
-Cox, M. A., \& Cox, T. F. (2008). Multidimensional scaling. In \emph{Handbook of data visualization} (pp. 315--347). Springer.
+Cox, M. A. A., \& Cox, T. F. (2008). Multidimensional scaling. In \emph{Handbook of data visualization} (pp. 315--347). Springer Berlin Heidelberg. \url{https://doi.org/10.1007/978-3-540-33037-0_14}
 
 \leavevmode\vadjust pre{\hypertarget{ref-dai2020functional}{}}%
-Dai, W., Mrkvička, T., Sun, Y., \& Genton, M. G. (2020). Functional outlier detection and taxonomy by sequential transformations. \emph{Computational Statistics \& Data Analysis}, \emph{149}, 106960.
+Dai, W., Mrkvička, T., Sun, Y., \& Genton, M. G. (2020). Functional outlier detection and taxonomy by sequential transformations. \emph{Computational Statistics \& Data Analysis}, \emph{149}, 106960. \url{https://doi.org/10.1016/j.csda.2020.106960}
 
 \leavevmode\vadjust pre{\hypertarget{ref-dau2019ucr}{}}%
-Dau, H. A., Bagnall, A., Kamgar, K., Yeh, C.-C. M., Zhu, Y., Gharghabi, S., Ratanamahatana, C. A., \& Keogh, E. (2019). The {UCR} time series archive. \emph{IEEE/CAA Journal of Automatica Sinica}, \emph{6}(6), 1293--1305.
+Dau, H. A., Bagnall, A., Kamgar, K., Yeh, C.-C. M., Zhu, Y., Gharghabi, S., Ratanamahatana, C. A., \& Keogh, E. (2019). The {UCR} time series archive. \emph{IEEE/CAA Journal of Automatica Sinica}, \emph{6}(6), 1293--1305. \url{https://doi.org/10.1109/JAS.2019.1911747}
 
 \leavevmode\vadjust pre{\hypertarget{ref-febrero2012fdausc}{}}%
-Febrero-Bande, M., \& Oviedo de la Fuente, M. (2012). Statistical computing in functional data analysis: The {R} package {fda.usc}. \emph{Journal of Statistical Software}, \emph{51}(4), 1--28.
+Febrero-Bande, M., \& Oviedo de la Fuente, M. (2012). Statistical computing in functional data analysis: The {R} package {fda.usc}. \emph{Journal of Statistical Software}, \emph{51}(4), 1--28. \url{https://doi.org/10.18637/jss.v051.i04}
 
 \leavevmode\vadjust pre{\hypertarget{ref-fritsch2012detecting}{}}%
-Fritsch, V., Varoquaux, G., Thyreau, B., Poline, J.-B., \& Thirion, B. (2012). Detecting outliers in high-dimensional neuroimaging datasets with robust covariance estimators. \emph{Medical Image Analysis}, \emph{16}(7), 1359--1370.
+Fritsch, V., Varoquaux, G., Thyreau, B., Poline, J.-B., \& Thirion, B. (2012). Detecting outliers in high-dimensional neuroimaging datasets with robust covariance estimators. \emph{Medical Image Analysis}, \emph{16}(7), 1359--1370. \url{https://doi.org/10.1016/j.media.2012.05.002}
 
 \leavevmode\vadjust pre{\hypertarget{ref-goldberger2000physiobank}{}}%
-Goldberger, A. L., Amaral, L. A., Glass, L., Hausdorff, J. M., Ivanov, P. C., Mark, R. G., Mietus, J. E., Moody, G. B., Peng, C.-K., \& Stanley, H. E. (2000). Physio{B}ank, {P}hysio{T}oolkit, and {P}hysio{N}et: Components of a new research resource for complex physiologic signals. \emph{Circulation}, \emph{101}(23), e215--e220.
+Goldberger, A. L., Amaral, L. A., Glass, L., Hausdorff, J. M., Ivanov, P. C., Mark, R. G., Mietus, J. E., Moody, G. B., Peng, C.-K., \& Stanley, H. E. (2000). Physio{B}ank, {P}hysio{T}oolkit, and {P}hysio{N}et: Components of a new research resource for complex physiologic signals. \emph{Circulation}, \emph{101}(23), e215--e220. \url{https://doi.org/10.1161/01.CIR.101.23.e215}
 
 \leavevmode\vadjust pre{\hypertarget{ref-goldstein2016comparative}{}}%
-Goldstein, M., \& Uchida, S. (2016). A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. \emph{PloS One}, \emph{11}(4), e0152173.
+Goldstein, M., \& Uchida, S. (2016). A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. \emph{PloS One}, \emph{11}(4), e0152173. \url{https://doi.org/10.1371/journal.pone.0152173}
 
 \leavevmode\vadjust pre{\hypertarget{ref-hernandez2106kernel}{}}%
-Hernández, N., \& Muñoz, A. (2016). Kernel {D}epth {M}easures for {F}unctional {D}ata with {A}pplication to {O}utlier {D}etection. In A. E. P. Villa, P. Masulli, \& A. J. Pons Rivero (Eds.), \emph{Artificial neural networks and machine learning -- {ICANN} 2016} (pp. 235--242). Springer, Cham.
+Hernández, N., \& Muñoz, A. (2016). Kernel {D}epth {M}easures for {F}unctional {D}ata with {A}pplication to {O}utlier {D}etection. In A. E. P. Villa, P. Masulli, \& A. J. Pons Rivero (Eds.), \emph{Artificial neural networks and machine learning -- {ICANN} 2016} (pp. 235--242). Springer, Cham. \url{https://doi.org/10.1007/978-3-319-44781-0_28}
 
 \leavevmode\vadjust pre{\hypertarget{ref-herrmann2021geometric}{}}%
-Herrmann, M., \& Scheipl, F. (2021). A geometric perspective on functional outlier detection. \emph{Stats}, \emph{4}(4), 971--1011.
+Herrmann, M., \& Scheipl, F. (2021). A geometric perspective on functional outlier detection. \emph{Stats}, \emph{4}(4), 971--1011. \url{https://doi.org/10.3390/stats4040057}
 
 \leavevmode\vadjust pre{\hypertarget{ref-isenkul2014improved}{}}%
-Isenkul, M., Sakar, B., Kursun, O., et al. (2014). Improved spiral test using digitized graphics tablet for monitoring parkinson's disease. \emph{The 2nd International Conference on e-Health and Telemedicine (ICEHTM-2014)}, \emph{5}.
+Isenkul, M., Sakar, B., Kursun, O., et al. (2014). Improved spiral test using digitized graphics tablet for monitoring parkinson's disease. \emph{The 2nd International Conference on e-Health and Telemedicine (ICEHTM-2014)}, \emph{5}, 171--175.
 
 \leavevmode\vadjust pre{\hypertarget{ref-kamalov2020outlier}{}}%
-Kamalov, F., \& Leung, H. H. (2020). Outlier detection in high dimensional data. \emph{Journal of Information \& Knowledge Management}, \emph{19}(01), 2040013.
+Kamalov, F., \& Leung, H. H. (2020). Outlier detection in high dimensional data. \emph{Journal of Information \& Knowledge Management}, \emph{19}(01), 2040013. \url{https://doi.org/10.1142/S0219649220400134}
 
 \leavevmode\vadjust pre{\hypertarget{ref-kandanaarachchi2020dimension}{}}%
-Kandanaarachchi, S., \& Hyndman, R. J. (2020). Dimension reduction for outlier detection using {DOBIN}. \emph{Journal of Computational and Graphical Statistics}, 1--16.
+Kandanaarachchi, S., \& Hyndman, R. J. (2020). Dimension reduction for outlier detection using {DOBIN}. \emph{Journal of Computational and Graphical Statistics}, 1--16. \url{https://doi.org/10.1080/10618600.2020.1807353}
 
 \leavevmode\vadjust pre{\hypertarget{ref-large2018}{}}%
-Large, J., Kemsley, E. K., Wellner, N., Goodall, I., \& Bagnall, A. (2018). Detecting forged alcohol non-invasively through vibrational spectroscopy and machine learning. \emph{Pacific-Asia Conference on Knowledge Discovery and Data Mining}, 298--309.
+Large, J., Kemsley, E. K., Wellner, N., Goodall, I., \& Bagnall, A. (2018). Detecting forged alcohol non-invasively through vibrational spectroscopy and machine learning. In D. Phung, V. S. Tseng, G. I. Webb, B. Ho, M. Ganji, \& L. Rashidi (Eds.), \emph{Advances in knowledge discovery and data mining} (pp. 298--309). Springer International Publishing. \url{https://doi.org/10.1007/978-3-319-93034-3_24}
 
 \leavevmode\vadjust pre{\hypertarget{ref-lee2007nonlinear}{}}%
-Lee, J. A., \& Verleysen, M. (2007). \emph{Nonlinear {Dimensionality} {Reduction}}. Springer Science \& Business Media.
+Lee, J. A., \& Verleysen, M. (2007). \emph{Nonlinear {Dimensionality} {Reduction}} (1st ed.). Springer Science \& Business Media. \url{https://doi.org/10.1007/978-0-387-39351-3}
 
 \leavevmode\vadjust pre{\hypertarget{ref-loperfido2020kurtosis}{}}%
-Loperfido, N. (2020). Kurtosis-based projection pursuit for outlier detection in financial time series. \emph{The European Journal of Finance}, \emph{26}(2-3), 142--164.
+Loperfido, N. (2020). Kurtosis-based projection pursuit for outlier detection in financial time series. \emph{The European Journal of Finance}, \emph{26}(2-3), 142--164. \url{https://doi.org/10.1080/1351847X.2019.1647864}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ma2011manifold}{}}%
-Ma, Y., \& Fu, Y. (2011). \emph{Manifold learning theory and applications}. CRC press.
+Ma, Y., \& Fu, Y. (Eds.). (2011). \emph{Manifold learning theory and applications} (1st ed.). CRC press. \url{https://doi.org/doi.org/10.1201/b11431}
 
 \leavevmode\vadjust pre{\hypertarget{ref-maaten2008visualizing}{}}%
-Maaten, L. van der, \& Hinton, G. (2008). Visualizing data using t-{SNE}. \emph{Journal of Machine Learning Research}, \emph{9}, 2579--2605.
+Maaten, L. van der, \& Hinton, G. (2008). Visualizing data using t-{SNE}. \emph{Journal of Machine Learning Research}, \emph{9}(86), 2579--2605. \url{http://jmlr.org/papers/v9/vandermaaten08a.html}
 
 \leavevmode\vadjust pre{\hypertarget{ref-marques2020internal}{}}%
-Marques, H. O., Campello, R. J., Sander, J., \& Zimek, A. (2020). Internal evaluation of unsupervised outlier detection. \emph{ACM Transactions on Knowledge Discovery from Data (TKDD)}, \emph{14}(4), 1--42.
+Marques, H. O., Campello, R. J., Sander, J., \& Zimek, A. (2020). Internal evaluation of unsupervised outlier detection. \emph{ACM Transactions on Knowledge Discovery from Data (TKDD)}, \emph{14}(4), 1--42. \url{https://doi.org/10.1145/3394053}
 
-\leavevmode\vadjust pre{\hypertarget{ref-mcinnes2020umap}{}}%
-McInnes, L., Healy, J., \& Melville, J. (2020). {UMAP}: {Uniform} {Manifold} {Approximation} and {Projection} for {Dimension} {Reduction}. \emph{Https://Arxiv.org/Abs/1802.03426}.
+\leavevmode\vadjust pre{\hypertarget{ref-mcinnes2018umap}{}}%
+McInnes, L., Healy, J., \& Melville, J. (2018). \emph{{UMAP}: Uniform manifold approximation and projection for dimension reduction}. arXiv. \url{https://doi.org/10.48550/ARXIV.1802.03426}
 
 \leavevmode\vadjust pre{\hypertarget{ref-munoz2004one}{}}%
-Muñoz, A., \& Moguerza, J. M. (2004). One-class support vector machines and density estimation: The precise relation. \emph{Iberoamerican Congress on Pattern Recognition}, 216--223.
+Muñoz, A., \& Moguerza, J. M. (2004). One-class support vector machines and density estimation: The precise relation. In A. Sanfeliu, J. F. Martínez Trinidad, \& J. A. Carrasco Ochoa (Eds.), \emph{Progress in pattern recognition, image analysis and applications} (pp. 216--223). Springer Berlin Heidelberg. \url{https://doi.org/10.1007/978-3-540-30463-0_27}
 
 \leavevmode\vadjust pre{\hypertarget{ref-coil20}{}}%
 Nane, S., Nayar, S., \& Murase, H. (1996). Columbia object image library: COIL-20. \emph{Dept. Comp. Sci., Columbia University, New York, Tech. Rep}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-navarro2021high}{}}%
-Navarro-Esteban, P., \& Cuesta-Albertos, J. A. (2021). High-dimensional outlier detection using random projections. \emph{TEST}, \emph{30}(4), 908--934.
+Navarro-Esteban, P., \& Cuesta-Albertos, J. A. (2021). High-dimensional outlier detection using random projections. \emph{TEST}, \emph{30}(4), 908--934. \url{https://doi.org/10.1007/s11749-020-00750-y}
 
 \leavevmode\vadjust pre{\hypertarget{ref-pang2018learning}{}}%
-Pang, G., Cao, L., Chen, L., \& Liu, H. (2018). Learning representations of ultrahigh-dimensional data for random distance-based outlier detection. \emph{Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining}, 2041--2050.
+Pang, G., Cao, L., Chen, L., \& Liu, H. (2018). Learning representations of ultrahigh-dimensional data for random distance-based outlier detection. \emph{Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining}, 2041--2050. \url{https://doi.org/10.1145/3219819.3220042}
 
 \leavevmode\vadjust pre{\hypertarget{ref-pestov2000geometry}{}}%
-Pestov, V. (2000). On the geometry of similarity search: Dimensionality curse and concentration of measure. \emph{Information Processing Letters}, \emph{73}(1-2), 47--51.
+Pestov, V. (2000). On the geometry of similarity search: Dimensionality curse and concentration of measure. \emph{Information Processing Letters}, \emph{73}(1-2), 47--51. \url{https://doi.org/10.1016/S0020-0190(99)00156-8}
 
 \leavevmode\vadjust pre{\hypertarget{ref-polonik1997minimum}{}}%
-Polonik, W. (1997). Minimum volume sets and generalized quantile processes. \emph{Stochastic Processes and Their Applications}, \emph{69}(1), 1--24.
+Polonik, W. (1997). Minimum volume sets and generalized quantile processes. \emph{Stochastic Processes and Their Applications}, \emph{69}(1), 1--24. \url{https://doi.org/10.1016/S0304-4149(97)00028-8}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ramsay2005functional}{}}%
-Ramsay, J. O., \& Silverman, B. W. (2005). \emph{Functional data analysis} (2nd ed). Springer.
+Ramsay, J. O., \& Silverman, B. W. (2005). \emph{Functional data analysis} (2nd ed). Springer. \url{https://doi.org/10.1007/b98888}
 
 \leavevmode\vadjust pre{\hypertarget{ref-rebbapragada2009finding}{}}%
-Rebbapragada, U., Protopapas, P., Brodley, C. E., \& Alcock, C. (2009). Finding anomalous periodic time series. \emph{Machine Learning}, \emph{74}(3), 281--313.
+Rebbapragada, U., Protopapas, P., Brodley, C. E., \& Alcock, C. (2009). Finding anomalous periodic time series. \emph{Machine Learning}, \emph{74}(3), 281--313. \url{https://doi.org/10.1007/s10994-008-5093-3}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ren2017projection}{}}%
-Ren, H., Chen, N., \& Zou, C. (2017). Projection-based outlier detection in functional data. \emph{Biometrika}, \emph{104}(2), 411--423.
+Ren, H., Chen, N., \& Zou, C. (2017). Projection-based outlier detection in functional data. \emph{Biometrika}, \emph{104}(2), 411--423. \url{https://doi.org/10.1093/biomet/asx012}
 
 \leavevmode\vadjust pre{\hypertarget{ref-ro2015outlier}{}}%
-Ro, K., Zou, C., Wang, Z., \& Yin, G. (2015). Outlier detection for high-dimensional data. \emph{Biometrika}, \emph{102}(3), 589--599.
+Ro, K., Zou, C., Wang, Z., \& Yin, G. (2015). Outlier detection for high-dimensional data. \emph{Biometrika}, \emph{102}(3), 589--599. \url{https://doi.org/10.1093/biomet/asv021}
 
 \leavevmode\vadjust pre{\hypertarget{ref-rousseeuw2005robust}{}}%
-Rousseeuw, P. J., \& Leroy, A. M. (2005). \emph{Robust regression and outlier detection} (Vol. 589). John Wiley \& Sons.
+Rousseeuw, P. J., \& Leroy, A. M. (2005). \emph{Robust regression and outlier detection}. John Wiley \& Sons. \url{https://doi.org/10.1002/0471725382}
 
 \leavevmode\vadjust pre{\hypertarget{ref-roweis2000nonlinear}{}}%
-Roweis, S. T., \& Saul, L. K. (2000). Nonlinear dimensionality reduction by locally linear embedding. \emph{Science}, \emph{290}(5500), 2323--2326.
+Roweis, S. T., \& Saul, L. K. (2000). Nonlinear dimensionality reduction by locally linear embedding. \emph{Science}, \emph{290}(5500), 2323--2326. \url{https://doi.org/10.1126/science.290.5500.2323}
 
 \leavevmode\vadjust pre{\hypertarget{ref-scott2006learning}{}}%
-Scott, C. D., \& Nowak, R. D. (2006). Learning minimum volume sets. \emph{The Journal of Machine Learning Research}, \emph{7}, 665--704.
+Scott, C. D., \& Nowak, R. D. (2006). Learning minimum volume sets. \emph{The Journal of Machine Learning Research}, \emph{7}(24), 665--704. \url{http://jmlr.org/papers/v7/scott06a.html}
 
 \leavevmode\vadjust pre{\hypertarget{ref-steyer2021elastic}{}}%
-Steyer, L., Stöcker, A., \& Greven, S. (2021). Elastic analysis of irregularly or sparsely sampled curves. \emph{arXiv Preprint arXiv:2104.11039}.
+Steyer, L., Stöcker, A., \& Greven, S. (2021). \emph{Elastic analysis of irregularly or sparsely sampled curves}. arXiv. \url{https://doi.org/10.48550/ARXIV.2104.11039}
 
 \leavevmode\vadjust pre{\hypertarget{ref-tenenbaum2000global}{}}%
-Tenenbaum, J. B., Silva, V. de, \& Langford, J. C. (2000). \href{https://www.ncbi.nlm.nih.gov/pubmed/11125149}{A {Global} {Geometric} {Framework} for {Nonlinear} {Dimensionality} {Reduction}}. \emph{Science}, \emph{290}(5500), 2319--2323.
+Tenenbaum, J. B., Silva, V. de, \& Langford, J. C. (2000). A {Global} {Geometric} {Framework} for {Nonlinear} {Dimensionality} {Reduction}. \emph{Science}, \emph{290}(5500), 2319--2323. \url{https://doi.org/10.1126/science.290.5500.2319}
 
 \leavevmode\vadjust pre{\hypertarget{ref-thudumu2020comprehensive}{}}%
-Thudumu, S., Branch, P., Jin, J., \& Singh, J. J. (2020). A comprehensive survey of anomaly detection techniques for high dimensional big data. \emph{Journal of Big Data}, \emph{7}(1), 1--30.
+Thudumu, S., Branch, P., Jin, J., \& Singh, J. J. (2020). A comprehensive survey of anomaly detection techniques for high dimensional big data. \emph{Journal of Big Data}, \emph{7}(1), 1--30. \url{https://doi.org/10.1186/s40537-020-00320-x}
 
 \leavevmode\vadjust pre{\hypertarget{ref-toivola2010novelty}{}}%
-Toivola, J., Prada, M. A., \& Hollmén, J. (2010). Novelty detection in projected spaces for structural health monitoring. \emph{International Symposium on Intelligent Data Analysis}, 208--219.
+Toivola, J., Prada, M. A., \& Hollmén, J. (2010). Novelty detection in projected spaces for structural health monitoring. In P. R. Cohen, N. M. Adams, \& M. R. Berthold (Eds.), \emph{Advances in intelligent data analysis IX} (pp. 208--219). Springer Berlin Heidelberg. \url{https://doi.org/10.1007/978-3-642-13062-5_20}
 
 \leavevmode\vadjust pre{\hypertarget{ref-unwin2019multivariate}{}}%
-Unwin, A. (2019). Multivariate outliers and the {O}3 plot. \emph{Journal of Computational and Graphical Statistics}, \emph{28}(3), 635--643.
+Unwin, A. (2019). Multivariate outliers and the {O}3 plot. \emph{Journal of Computational and Graphical Statistics}, \emph{28}(3), 635--643. \url{https://doi.org/10.1080/10618600.2019.1575226}
 
 \leavevmode\vadjust pre{\hypertarget{ref-xie2017geometric}{}}%
-Xie, W., Kurtek, S., Bharath, K., \& Sun, Y. (2017). A {G}eometric {A}pproach to {V}isualization of {V}ariability in {F}unctional data. \emph{Journal of the American Statistical Association}, \emph{112}(519), 979--993.
+Xie, W., Kurtek, S., Bharath, K., \& Sun, Y. (2017). A {G}eometric {A}pproach to {V}isualization of {V}ariability in {F}unctional data. \emph{Journal of the American Statistical Association}, \emph{112}(519), 979--993. \url{https://doi.org/10.1080/01621459.2016.1256813}
 
 \leavevmode\vadjust pre{\hypertarget{ref-xu2018comparison}{}}%
-Xu, X., Liu, H., Li, L., \& Yao, M. (2018). A comparison of outlier detection techniques for high-dimensional data. \emph{International Journal of Computational Intelligence Systems}, \emph{11}(1), 652.
+Xu, X., Liu, H., Li, L., \& Yao, M. (2018). A comparison of outlier detection techniques for high-dimensional data. \emph{International Journal of Computational Intelligence Systems}, \emph{11}(1), 652--662. \url{https://doi.org/10.2991/ijcis.11.1.50}
 
 \leavevmode\vadjust pre{\hypertarget{ref-zhang2006anomaly}{}}%
-Zhang, J., \& Zulkernine, M. (2006). Anomaly based network intrusion detection with unsupervised outlier detection. \emph{2006 IEEE International Conference on Communications}, \emph{5}, 2388--2393.
+Zhang, J., \& Zulkernine, M. (2006). Anomaly based network intrusion detection with unsupervised outlier detection. \emph{2006 IEEE International Conference on Communications}, \emph{5}, 2388--2393. \url{https://doi.org/10.1109/ICC.2006.255127}
 
 \leavevmode\vadjust pre{\hypertarget{ref-zimek2018there}{}}%
-Zimek, A., \& Filzmoser, P. (2018). There and back again: Outlier detection between statistical reasoning and data mining algorithms. \emph{Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery}, \emph{8}(6), e1280.
+Zimek, A., \& Filzmoser, P. (2018). There and back again: Outlier detection between statistical reasoning and data mining algorithms. \emph{Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery}, \emph{8}(6), e1280. \url{https://doi.org/10.1002/widm.1280}
 
 \leavevmode\vadjust pre{\hypertarget{ref-zimek2012survey}{}}%
-Zimek, A., Schubert, E., \& Kriegel, H.-P. (2012). A survey on unsupervised outlier detection in high-dimensional numerical data. \emph{Statistical Analysis and Data Mining: The ASA Data Science Journal}, \emph{5}(5), 363--387.
+Zimek, A., Schubert, E., \& Kriegel, H.-P. (2012). A survey on unsupervised outlier detection in high-dimensional numerical data. \emph{Statistical Analysis and Data Mining: The ASA Data Science Journal}, \emph{5}(5), 363--387. \url{https://doi.org/10.1002/sam.11161}
 
 \leavevmode\vadjust pre{\hypertarget{ref-zimek2015blind}{}}%
-Zimek, A., \& Vreeken, J. (2015). The blind men and the elephant: On meeting the problem of multiple truths in data from clustering and pattern mining perspectives. \emph{Machine Learning}, \emph{98}(1), 121--155.
+Zimek, A., \& Vreeken, J. (2015). The blind men and the elephant: On meeting the problem of multiple truths in data from clustering and pattern mining perspectives. \emph{Machine Learning}, \emph{98}(1), 121--155. \url{https://doi.org/10.1007/s10994-013-5334-y}
 
 \end{CSLReferences}
+
+\newpage
+
+\appendix
+
+\hypertarget{sec:app}{%
+\section{Example visualizations of the data used in the quantitative experiments}\label{sec:app}}
+
+\begin{figure}
+\centering
+\includegraphics{00_paper_wires_files/figure-latex/app-1.pdf}
+\caption{\label{fig:app}\label{fig:app} Plots to Table 1: Functional data and tMDS embeddings. Inlier class in grey, outlier class in red. \(r = 0.05\)}
+\end{figure}
 
 \end{document}

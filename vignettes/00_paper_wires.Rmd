@@ -128,5 +128,5 @@ theme_set(theme)
 <!-- \setlength{\parskip}{8pt} -->
 <!-- \noindent -->
 
-<!-- ```{r child = '08_appendix.Rmd'} -->
-<!-- ``` -->
+```{r child = '08_appendix.Rmd'}
+```
