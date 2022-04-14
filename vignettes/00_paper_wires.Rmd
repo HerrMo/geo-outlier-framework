@@ -1,0 +1,132 @@
+---
+output:
+  bookdown::pdf_document2:
+    keep_tex: yes
+    toc: false
+    pagestyle: headings
+    extra_dependencies: ["float", "hyperref"]
+    includes:
+      before_body: abstract_wires.tex
+      in_header:
+      - preamble_wires.tex
+      - latex-math/basic-math.tex
+      - latex-math/basic-ml.tex
+      - fda-math.tex
+    # citation_package: biblatex
+    # mainfont: Helvetica
+    # latex_engine: xelatex
+    fig_caption: yes
+documentclass: article
+linkcolor: blue
+classoption:
+  - 10pt
+bibliography: references.bib
+link-citations: TRUE
+csl: apa
+# biblio-style: apa
+---
+
+<!--
+Change names and info in preamble.tex and abstract in abstract.tex
+-->
+
+<!-- rmarkdown::render("vignettes/00_paper_wires.Rmd", output_format = rmarkdown::latex_document()) -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  comment = "#>",
+  fig.pos = "!H"
+)
+
+src_pth <- here::here()
+if (Sys.info()["user"] != "fabians") {
+  devtools::load_all("~/projects/manifun")
+  devtools::load_all("~/projects/simfun")
+} else if (Sys.info()["user"] == "flo") {
+  devtools::load_all("~/Documents/repos/manifun")
+  devtools::load_all("~/Documents/repos/simfun")
+} else {
+  devtools::load_all("~/fda/manifun")
+  devtools::load_all("~/fda/simfun")
+}
+
+library(data.table)
+library(fda)
+library(fda.usc)
+library(parallel)
+library(dbscan)
+library(ggplot2)
+library(igraph)
+library(StatPerMeCo)
+library(pROC)
+library(cowplot)
+library(latex2exp)
+library(patchwork)
+
+reps <- 1:50
+ratios <- c(0.01, 0.025, 0.05, 0.1)
+dists <- function(x) as.matrix(proxy::dist(x))
+frank <- function(x, ndim = 2, k = 0.75 * nrow(extract_points(x))) {rank(-lof(extract_points(x, ndim = ndim), k = k))}
+label_size = 3
+```
+
+```{r, include = FALSE}
+grid_col = "#cccccc"
+# partially copied from https://github.com/hrbrmstr/hrbrthemes/blob/master/R/theme-ipsum.r
+theme = theme_minimal() +
+  theme(legend.background=element_blank()) +
+  theme(legend.key=element_blank()) +
+  theme(panel.grid=element_blank()) +
+  theme(panel.spacing=grid::unit(2, "lines")) +
+  theme(axis.line=element_line(color="#2b2b2b", size=0.15)) +
+  theme(axis.text.x=element_text(margin=margin(t=0))) +
+  theme(axis.text.y=element_text(margin=margin(r=0)))
+
+  axis_title_just = "rt"
+  xj <- switch(tolower(substr(axis_title_just, 1, 1)), b=0, l=0, m=0.5, c=0.5, r=1, t=.9)
+  yj <- switch(tolower(substr(axis_title_just, 2, 2)), b=0, l=0, m=0.5, c=0.5, r=1, t=.9)
+  theme = theme + theme(axis.title.x=element_text(size = 8, hjust = xj))
+  theme = theme + theme(axis.title.y=element_text(size = 8, hjust = yj, vjust = -1))
+  theme = theme + theme(axis.title.y.right=element_text(hjust=yj, angle=90))
+  theme = theme + theme(strip.text=element_text(hjust=0))
+  theme = theme + theme(title = element_blank(),
+                        axis.title = element_blank(),
+                        axis.text.x = element_text(size = 7),
+                        axis.text.y = element_text(size = 7))
+
+theme_set(theme)
+```
+
+
+```{r child = '01_introduction.Rmd'}
+```
+
+```{r child = '02_preliminaries.Rmd'}
+```
+
+```{r child = '03_geometric_framework.Rmd'}
+```
+
+```{r child = '06_experiments.Rmd'}
+```
+
+```{r child = '04_implications.Rmd'}
+```
+
+```{r child = '07_conclusion.Rmd'}
+```
+
+\section*{References}
+
+<div id="refs"></div>
+
+<!-- \setlength{\bibsep}{0.0pt} -->
+<!-- \setlength{\parindent}{-0.2in} -->
+<!-- \setlength{\leftskip}{0.2in} -->
+<!-- \setlength{\parskip}{8pt} -->
+<!-- \noindent -->
+
+<!-- ```{r child = '08_appendix.Rmd'} -->
+<!-- ``` -->

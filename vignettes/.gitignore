@@ -1,0 +1,9 @@
+report_initial-experiments_cache/
+report_initial-experiments_files/
+report_image-data_cache/
+report_image-data_files/
+vignettes/images/
+*.html
+*.R
+*.Rhistory
+.Rproj.user/

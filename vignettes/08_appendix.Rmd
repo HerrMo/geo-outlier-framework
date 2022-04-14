@@ -1,0 +1,54 @@
+\newpage
+
+<!-- # (APPENDIX) Appendix {-} -->
+
+\appendix
+
+# Example visualizations of the data used in the quantitative experiments{#sec:app}
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  comment = "#>"
+)
+
+if (Sys.info()["user"] != "fabians") {
+  devtools::load_all("~/projects/manifun")
+  devtools::load_all("~/projects/simfun")
+} else {
+  devtools::load_all("~/fda/manifun")
+  devtools::load_all("~/fda/simfun")
+}
+
+library(data.table)
+library(fda)
+library(fda.usc)
+library(parallel)
+library(dbscan)
+library(ggplot2)
+library(igraph)
+library(StatPerMeCo)
+library(pROC)
+library(cowplot)
+library(latex2exp)
+
+reps <- 1:50
+ratios <- c(0.01, 0.025, 0.05, 0.1)
+dists <- function(x) as.matrix(proxy::dist(x))
+frank <- function(x, ndim = 2, k = 0.75 * nrow(extract_points(x))) {rank(-lof(extract_points(x, ndim = ndim), k = k))}
+
+source(here::here("R/help_funs.R"))
+```
+
+```{r app, echo=FALSE, fig.height = 6, fig.cap = "\\label{fig:app} Plots to Table 1: Functional data and tMDS embeddings. Inlier class in grey, outlier class in red. $r = 0.05$"}
+source(here::here("R/examples_plots_appendix_1.R"))
+plt_app_dodgers / plt_app_pho / plt_app_star
+```
+
+<!-- ![A geometric framework exploiting the metric structure of a data set allows to (1) conceptualize outlier detection on a general level and (2) to conduct outlier detection in a principled and canonical way in very different high-dimensional and/or non-tabular data types such as functions (A.1), graphs (B.1), or images (C.1). The framework furthermore distinguishes structural (red) and distributional (blue) outliers, which can be detected, visualized, and quantified (A.2 - C.2) with simple and well-established manifold learning and outlier scoring methods such as MDS and LOF. (Not all graph and image observations can be plotted at once in B.1 and C.1.)](images/graphical-abstract.png) -->
+
+<!-- ```{r abstract-graph, echo=FALSE, fig.height = 8, fig.cap = "A geometric framework exploiting the metric structure of a data set allows to (1) conceptualize outlier detection on a general level and (2) to conduct outlier detection in a principled and canonical way in very different high-dimensional and/or non-tabular data types such as functions (A.1), graphs (B.1), or images (C.1). The framework furthermore distinguishes structural (red) and distributional (blue) outliers, which can be detected, visualized, and quantified (A.2 - C.2) with simple and well-established manifold learning and outlier scoring methods such as MDS and LOF. (Not all graph and image observations can be plotted at once in B.1 and C.1.)"} -->
+<!-- source(here::here("R/graphical-abstract.R")) -->
+<!-- graphical_abstract -->
+<!-- ``` -->

@@ -1,0 +1,45 @@
+# Geometrical framework for outlier detection{#sec:framework}
+
+The framework we propose generalizes an approach for outlier detection in functional data developed recently [@herrmann2021geometric].
+Since the approach exploits the metric structure of a functional data set, 
+it is straightforward to generalize it to other data types, both from a theoretical as well as a practical perspective. Theoretically, the observation space needs to be a metric space, i.e. it needs to be equipped with a metric. Practically, there only needs to be a suitable distance measure to compute pairwise distances between observations. 
+Two assumptions are fundamental for the framework. First of all, the \emph{manifold assumption} that observed high-dimensional data lie on or close to a (low dimensional) manifold. 
+Note that functional data typically contain a lot of structure, and it is often reasonable to assume that only few modes of variation suffice to describe most of the information contained in the data, i.e., such functional data often have low intrinsic dimension, at least approximately, see Figure \ref{fig:outtypes} for a simple synthetic example. Similar remarks hold for other data types such as image data [@lee2007nonlinear; @ma2011manifold]. Secondly, it is assumed that outliers are either *structural outliers* -- or in the terminology of Zimek and Filzmoser [-@zimek2018there, p. 10] "real outliers" stemming from a different data generating process than the bulk of the data -- or *distributional* outliers, observations that are structurally similar to the main data but still appear outlying in some sense. We make these notions mathematically precise in the remainder of this section based on the exposition in @herrmann2021geometric before we demonstrate the practical relevance of the framework in section \ref{sec:exps} and summarize its general conceptual implications in section \ref{sec:discussion}.  
+Given a high-dimensional observation space $\hdspace$ of dimension $\obsdim$, a $d$-dimensional parameter space $\pspace \subset \mathbb{R}^d$, such that the elements $\theta_i \in \pspace$ are realizations of the probability distribution $P$ over the domain $\mathbb{R}^d$, i.e., $\theta_i \sim P$, and given an embedding space $\embedspace \subset \mathbb{R}^{d'}$, define the mappings $\phi$ and $e$ so that
+$$\Theta \stackrel{\phi}{\to} \mathcal{\mani_{\hdspace}} \stackrel{e}{\to} \mathcal{Y},$$
+with $\mani_{\hdspace} \subset \hdspace$ a manifold in the observation space. The structure of $\mani_{\hdspace}$ is determined by the structure and dimensionality of $\pspace$, $P$ and the map $\phi$, which is isometric for the appropriate metrics in $\pspace$ and $\hdspace$.
+Conceptually, the low-dimensional parameter space $\Theta$ represents the modes of variation of the data and the mapping $\phi$ represents the data generating process that yields high dimensional data $x_i = \phi(\theta_i) \in \mani_{\hdspace}$ characterized by these modes of variation.
+We assume that low-dimensional representations of the observed data in the embedding space $\embedspace$, which capture as much of the metric structure of $\mani_{\hdspace}$ as possible, can be learned from the observed data. A successful embedding $e$ then also recovers as much of the structure of the parameter space $\pspace$ as possible in the low dimensional representations $y_i = e(x_i) \in \embedspace$.  
+
+```{r outtypes, echo=FALSE, message = FALSE, fig.cap = "\\label{fig:outtypes}Example data types. A: Functional inliers (grey) with a structural outlier (red) and distributional outliers (blue). B: Graph data with a structural outlier (lower right graph). C: Image data with a structural outlier (lower right image).", fig.height=2}
+
+load(here::here("data/coil20.RData"))
+source(here::here("R/simulate_data.R"))
+source(here::here("R/examples_graph.R"))
+source(here::here("R/examples_pics.R"))
+source(here::here("R/examples_funs.R"))
+
+
+plot_grid(plotlist = list(fun_plt, graph_plt ,pic_plt), nrow = 1, labels = "AUTO", hjust = c(0, 0.7, 0), label_x = c(0, 0.01, 0.01))
+```
+
+In our framework, distributional outliers are defined w.r.t. minimum volume sets [@polonik1997minimum] of $P$ in this parameter space $\pspace$:  
+
+\noindent \textbf{Definition 1:} *Minimum volume set*  
+Given a probability distribution $P$ over (a subset of) $\mathbb{R}^d$, a minimum volume set $\Omega^*_{\alpha}$ is a set that minimizes the quantile function $V(\alpha) = \inf_{C \in \mathcal{C}}\{\text{Leb}(C): P(C) \geq \alpha\}, 0 < \alpha < 1$} for i.i.d. random variables in $\mathbb{R}^{d}$ with distribution $P$, $\mathcal{C}$ a class of measurable subsets in $\mathbb{R}^{d}$ and Lebesgue measure $\text{Leb}$.  
+So $\Omega^*_{\alpha, P}$ is the smallest region containing a probability mass of at least $\alpha$. We can now define structural outliers and distributional outliers as follows:  
+
+\noindent \textbf{Definition 2:} *Structural and distributional outlier*  
+Define $\mani_{\Theta, \phi}$ as the codomain of $\phi$ applied to $\Theta$.  
+Define two such manifolds $\Man = \mani_{\Than, \phan}$ and $\Min = \mani_{\Thin, \phin}$ and a data set $X \subset \Man \cup \Min$.  
+W.l.o.g., let $r = \frac{\vert \{x_i: x_i \in \Man \land x_i \notin \Min\} \vert}{\vert \{x_i: x_i \in \Min\} \vert}  \lll  1$ be the *structural outlier ratio*, i.e. most observations are assumed to stem from $\Min$. Then an observation $x_i \in X$ is    
+
+- a *structural outlier* if $x_i \in \Man$ and $x_i \notin \Min$ and
+- a *distributional outlier* if $x_i \in \Min$ and $\theta_i \notin \Omega^*_{\alpha}$, where $\Omega^*_{\alpha}$ is defined by the density of the distribution generating $\Than$.
+
+Figure \ref{fig:outtypes} shows examples of three data types with structural outliers (in red), and some distributional outliers for the functional data example. Since distributional outliers are structurally similar to inliers, they are hard to detect visually for graph and image data, as doing so requires a lot of "normal" data to reference against and we can only display a few example observations here. This is one reason why we mostly use functional data for exposition in the following.
+
+Summarizing the framework's crucial aspects in less technical terms, we assume that the bulk of the observations comes from a single "common" process, which generates observations in some subspace $\Min$, while some data might come from an "anomalous" process, which defines structurally distinct observations in a different subspace $\Man$. This follows standard notions in outlier detection which often assume (at least) two different data-generating processes [@dai2020functional; @zimek2018there]. Note that this does not imply that structural outliers are in any way similar to each other: $\Pan$ could be very widely dispersed or arise from a mixture or several different distributions and/or $\Man$ could consist of several unconnected components representing various kinds of structural abnormality. The only crucial aspect is that the process from which *most* of the observations emerge yields structurally similar data. 
+We consider settings with a structural outlier ratio $r \in [0, 0.1]$ to be suitable for outlier detection. The proportion of *distributional* outliers on $\Min$, in contrast, depends only on the $\alpha$-level for $\Omega^*_{\alpha, \Pin}$. 
+Practically speaking, neither prior knowledge about these manifolds nor specific assumptions about structural differences are necessary in our approach.
+The key points are that 1) structural outliers are not on the main data manifold $\Min$, 2) distributional outliers are at the edges of $\Min$, and 3) these properties are preserved in the embedding vectors as long as the embedding is based on an appropriate notion of distance in $\hdspace$.  

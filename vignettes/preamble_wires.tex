@@ -1,0 +1,66 @@
+%\documentclass[10pt]{article}
+\usepackage{fullpage}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage[section]{placeins}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage{breakcites}
+\usepackage{lineno}
+\usepackage{hyphenat}
+\usepackage[all]{nowidow}
+\renewcommand{\familydefault}{\sfdefault}
+% \usepackage[colorlinks = true,
+%             linkcolor = blue,
+%             urlcolor  = blue,
+%             citecolor = blue,
+%             anchorcolor = blue]{hyperref}
+
+\usepackage{etoolbox}
+%\makeatletter
+% \patchcmd\@combinedblfloats{\box\@outputbox}{\unvbox\@outputbox}{}{%
+%   \errmessage{\noexpand\@combinedblfloats could not be patched}%
+% }%
+%\makeatother
+%\usepackage{natbib}
+
+\renewenvironment{abstract}
+  {{\bfseries\noindent{\abstractname}\par\nobreak}\footnotesize}
+  {\bigskip}
+\titlespacing{\section}{0pt}{*3}{*1}
+\titlespacing{\subsection}{0pt}{*2}{*0.5}
+\titlespacing{\subsubsection}{0pt}{*1.5}{0pt}
+
+\usepackage{authblk}
+
+\usepackage{graphicx}
+\usepackage{enumitem}
+%tikz
+\usepackage{tikz}
+\usetikzlibrary{matrix,arrows,decorations.pathreplacing}
+\tikzstyle{every node}=[font=\fontsize{8}{10}\selectfont]
+
+\usepackage[space]{grffile}
+\usepackage{latexsym}
+\usepackage{textcomp}
+\usepackage{longtable}
+\usepackage{tabulary}
+\usepackage{booktabs,array,multirow}
+\usepackage{amsfonts,amsmath,amssymb}
+\usepackage{subcaption}
+\providecommand\citet{\cite}
+\providecommand\citep{\cite}
+\providecommand\citealt{\cite}
+\newif\iflatexml\latexmlfalse
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\AtBeginDocument{\DeclareGraphicsExtensions{.pdf,.PDF,.eps,.EPS,.png,.PNG,.tif,.TIF,.jpg,.JPG,.jpeg,.JPEG}}
+
+\newcommand{\new}[1]{{\color{blue} #1}}
+\newcommand{\fs}[1]{{\color{green}\textit #1}}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{float}
+
+\usepackage[margin=1.5in]{geometry}

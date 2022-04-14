@@ -1,0 +1,15 @@
+# Conclusion{#sec:conclusion}
+
+In conclusion, our illustration suggests that the proposed geometric conceptualization, which distinguishes *distributional* and *structural* outlier on a general level, provides a more precise terminology and shows that outlier detection in high-dimensional and complex non-tabular data does need to be specifically challenging per se. Convincing results could be achieved in a wide range of settings and data types by a combination of the simple methods MDS for dimension reduction and visualization and LOF for outlier scoring. We hope that the proposed framework contributes to a better understanding of unsupervised outlier detection and provides some guidance to practitioners as well as methodological researchers in this regard.
+
+\section*{Funding}
+This work has been funded by the German Federal Ministry of Education and Research (BMBF) under Grant No. 01IS18036A. The authors of this work take full responsibility for its content.
+
+\section*{Acknowledgment}
+The authors thank Almond Stöcker for his helpful advice regarding the spiral curve data.
+
+\section*{Conflict of interest}
+The authors have declared no conflicts of interest for this article.
+
+\section*{Data availability statement}
+The data and code to reproduce the findings of this study are openly available on GitHub at: 

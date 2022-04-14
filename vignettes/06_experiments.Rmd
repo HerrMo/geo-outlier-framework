@@ -1,0 +1,130 @@
+\section{Experiments}\label{sec:exps}
+This section lays out practical implications of the framework through experiments on several different data types, via a comprehensive qualitative and visual analysis of six examples. In addition, we provide quantitative results for three labeled data sets. 
+
+\subsection{Methods}\label{sec:exps:meths}
+
+The focus of our experiments is to evaluate a general framework for outlier detection, which is motivated by geometrical considerations. With these experiments, we support the claim that the perspective induced by the framework lets us visualize, detect and analyze outliers in a principled and canonical way. For this demonstration,
+we chose Multidimensional Scaling (MDS) [@cox2008multidimensional] as our embedding method and Local Outlier Factors (LOF) [@breunig2000lof] as our outlier scoring method. Note that the experiments are not intended to
+draw conclusions about the superiority of these specific methods and other combinations of methods may be as suitable or even superior for the purpose (see for example results for Isomap in @herrmann2021geometric).  
+However, more sophisticated embedding methods than MDS require tuning over multiple hyperparameters, whereas MDS has only one -- the embedding dimension. Moreover, an advantage of MDS over other embedding methods is that it aims for isometric embeddings, i.e.,
+tries to preserve all pairwise distances as closely as possible, which is crucial in particular to reflect structural outlyingness. In fact, Torgerson Multidimensional Scaling (tMDS, i.e., MDS based on $L_2$ distance) -- that is: a simple linear embedding equivalent to standard PCA scores -- seems to uncover many outlier structures sufficiently well in many data settings despite its simplicity. 
+For similar reasons, we chose to use LOF as an outlier scoring method. This method also has a single hyperparameter, $minPts$, the number of nearest neighbors used to define a point's (local) neighborhood, which we denote as $k$ in the following. Moreover, in contrast to many other outlier scoring methods such one-class support vector machines [@munoz2004one] which require low-dimensional tabular data as input (i.e. which can only be applied to complex data types indirectly by using embedding vectors as feature inputs), LOF can also be applied to high-dimensional and non-tabular data directly as it only requires a distance matrix as input. Experiments on functional data have shown that LOF applied directly to a distance matrix of functional data and LOF applied to the corresponding embedding vectors yield  consistent results [@herrmann2021geometric].  
+Note, however, that beyond the ability to apply outlier scoring methods to low-dimensional embedding vectors of high-dimensional and/or non-tabular data, such embeddings provide additional practical value:
+In particular, scalar scores or ranks as provided by outlier scoring methods are not able to reflect differences between distributional and structural outliers whereas such differences become accessible and interpretable in visualizations of these embeddings.  
+This also points to a major caveat of the quantitative (in contrast to the qualitative) experiments, in which we use ROC-AUC to evaluate the accuracy of outlier ranks obtained with LOF with respect to the "outlier" structure defined by the different classes of labeled data. Setting one class as $\Min$ and contaminating this "normal" class with 
+observations from other classes, which are assumed to be structurally different and thus form $\Man$, we obtain data sets $X \subset \Min \cup \Man$. Although this is a widely used approach [@campos2016evaluation; @goldstein2016comparative; @pang2018learning], such an evaluation only considers outliers as defined by the class labels and poor AUC values may not necessarily imply poor performance if there are observation from the "normal" data class which are (distributionally or structurally) more outlying (and thus obtain higher scores) than some of the "labeled" outliers, see also @campos2016evaluation. This is why we not merely report potentially problematic quantitative measures (Section \ref{sec:exps:quant}), and instead put more emphasis on qualitative experiments that are much closer to the way we would recommend to use these methods in practical applications.
+
+\subsection{Qualitative assessment}\label{sec:exps:qual}
+
+In this section, we provide extensive qualitative analyses to demonstrate the practical relevance of the framework. First, we demonstrate that the distinction between structural and distributional outliers is preserved in embeddings using two simulated functional data sets. Secondly, using two real world data sets -- a functional and an image data set -- we show that the approach can be applied flexibly to different data structures. Thirdly, we illustrate the general applicability to more general data types based on synthetic graph data and real world curves data. In the following, all LOF results are obtained using $k = 0.75n$, where $n$ is the number of observations.
+
+\subsubsection{Demonstrating the framework's practical implications on idealized synthetic data}
+
+Figure \ref{fig:exps-sim} shows two simulated functional data sets (A & B, left) and their 2$\vizdim$ PCA/tMDS embeddings (A & B, right). One can observe that data set A is an example with structural outliers in terms of shape and slope. This is an extended version of an example by @hernandez2106kernel and, following their notation, the two manifolds can be defined as $\Man = \{x(t) \vert x(t) = b + 0.05t + \cos(20\pi t), b \in \mathbb R\} \cup \{x(t) \vert x(t) = (c - 0.05t) + e_t, c, e_t \in \mathbb R\}$ and $\Min = \{x(t) \vert x(t) = a + 0.01t + \sin(\pi t^2), a \in \mathbb R\}$ with $t \in [0, 1]$ and $a \sim N(\mu = 15, \sigma = 4)$, $b \sim N(\mu = 5, \sigma = 3)$, $c \sim N(\mu = 25, \sigma = 3)$, and $e_t \sim N(\mu = 0, \sigma = 4)$. Note that the structural outliers are not all similar to each other in shape or slope, which is reflected in $\Min$ being a union of two structurally different manifolds.  
+In contrast, data set B of various (vertically shifted) Beta-distribution densities is an example where distributional outlyingness is defined by phase -- i.e. horizontal -- variation and structural outlyingness by vertical shifts. The respective manifolds are defined as $\Man = \{x(t) \vert x(t) = b + B(t, \alpha, \beta), (b, \alpha, \beta)' \in \mathbb R \times \mathbb R^+ \times \mathbb R^+\}$ and $\Min = \{x(t) \vert x(t) = B(t, \alpha, \beta), (\alpha, \beta)' \in \mathbb R^+ \times \mathbb R^+\}$ with $t \in [0, 1]$, $\alpha, \beta \sim U[0.1, 2]$, $b \sim U[-5, 5]$ and $B$ the density of the beta distribution. For both, we generate 100 "normal" observations from $\Min$ and 10 structural outliers from $\Man$, with $\obsdim = 500$ evaluation points in the first and $\obsdim = 50$ evaluation points in the latter example.  
+Structural outliers are clearly separated from observations on $\Min$ in both cases and appear as outlying in the 2$\vizdim$ embeddings. Moreover, we see that distributional outliers are embedded at the periphery of $\Min$. Numbers in figures are ascending LOF score ranks of the outliers. Note that $\Min \subset \Man$ in data set B. Nevertheless, most structurally outlying observations from $\Man$ are clearly separated in the embedding. Two structural outliers are in or very close to $\Min \cup \Man$ and thus appear in the main bulk of the data. The LOF scores also reflect this, as one of the distributional outliers is ranked as even more outlying.  
+
+```{r fda-simulated, echo=FALSE, fig.height = 4.5, fig.cap = "\\label{fig:exps-sim} Simulated functional data and their 2$\\vizdim$ embeddings. Numbered labels are ascending LOF score ranks of the outliers ($k = 0.75n$)."}
+# fig.height = 3.5
+source(here::here("R/simulate_data.R"))
+source(here::here("R/help_funs.R"))
+
+source(here::here("R/exp_fda-shift-structure.R"))
+source(here::here("R/exp_fda-shape-structure.R"))
+
+plts_shift <- plot_grid(plotlist = list(plt_funs, plt_mds), nrow = 1)
+plts_shape <- plot_grid(plotlist = list(plt_funs_hm, plt_emb_hm), nrow = 1)
+plot_grid(plotlist = list(plts_shape, plts_shift),
+          nrow = 2,
+          labels = "AUTO", hjust = -0.5, vjust = c(1.5, 1.5, 1.5, 1.5)) 
+```
+
+Summarizing, we see that in these simulated situations, practically relevant outlier sub-structure -- deviations in terms of functional shape, slope or in terms of vertical shifts -- are represented accurately by low-dimensional embeddings learned from the observed high-dimensional data. In particular, structural outliers do not need to be similar to each other (Example A) nor do we require that the inlier and outlier manifolds are completely disjoint (Example B) for the approach to work.
+Moreover, we see that situations where distributional outliers appear "more" outlying than structural outliers are captured as well. Note that this is a crucial aspect. Although this aspect is quantified correctly by an outlier scoring method such as LOF, the two outlier types can be distinguished only if visualizations as provided by embedding methods are considered. Consider that evaluation of unsupervised outlier detection is often performed using a labeled data set, setting observations from one class as inliers and sampling observations from another class as outliers, and then computing binary classification performance measures such as the AUC [@campos2016evaluation; @goldstein2016comparative; @pang2018learning]. Different class labels do not guarantee that the classes do not overlap, i.e., that the respective manifolds are disjoint in $\hdspace$, nor that there are no distributional outliers appearing more outlying than structural outliers. Thus, there may be distributional outliers among the inliers which are scored as more outlying than structural outliers (see data set B) and a purely quantitative assessment is likely to mislead. Being able to create faithful visualizations of such more complex outlier structures for high-dimensional data is a crucial benefit of the proposed approach.
+
+\subsubsection{Demonstrating flexibility on real functional and image data}
+
+Of course, real-world data settings are usually more complicated than our simulated examples. First of all, 
+real data are much more difficult to assess since the underlying manifolds are usually not directly accessible, so it is impossible to define the exact structure of the data manifolds like in the simulated examples. In addition, some data sets may not contain any clear \textit{structural} outliers, while others may not contain any clear \textit{distributional} outliers, or both. A crucial aspect of the approach is that, although it is based on a highly abstract conceptualization involving unobservables like the parameter space $\Theta$ and its probability measure $P$, it is not at all necessary to come up with any such formalization of the data generating process to put the approach into practice and obtain meaningful results, as will be demonstrated in the following.  
+
+Consider Figure \ref{fig:fda-image-real}, which shows a real functional data set of 591 ECG measurements [@dau2019ucr; @goldberger2000physiobank] with 82 evaluation points per function, i.e. a $\obsdim = 82$ dimensional data set (A), and a sample of the COIL20 data [@coil20] (B). Obviously, it is impossible to define the exact structure of the ECG data manifold. However, the visualizations of the functions on the left-hand side suggest that there are no observations with clear structural differences in functional form: none of the curves are clearly shifted away from the bulk of the data, nor are there any curves with isolated peaks or observations with clearly different shapes. In accordance with this observation, there is also no clearly separable structure in the embedding. However, observations which appear in low density regions of the embedding can be regarded as distributional outliers in terms of horizontal shift, i.e., phase variation, like the three observations with the earliest minima colored in blue.
+This is also reflected in the scoring of the embeddings, as the observations with the lowest LOF ranks are clear distributional outliers in function space. However, the embedding provides much more complete information in this example than LOF ranks and the functional visualization alone. For example, they also pinpoint a \textit{vertical shift} outlier in the first and last thirds of the domain (green curve, which would be hard to detect based on its functional representation alone). This apparently represents a second "dimension" of distributional outlyingness.  
+The COIL20 data [@coil20] consists of 1440 pictures ($128 \times 128$, gray scale) of 20 different objects. The $72$ pictures in each class depict one and the same object at different rotation angles with a picture taken at every $5$° within $[0$°$, 355$°$]$.
+We use all $72$ pictures of a rubber duck to represent observations from $\Min$ and randomly sample $7$ observations (i.e. $r \approx 0.1$) from the $72$ pictures of a toy car as structural outliers from $\Man$. We compute $L_2$ distances of the vectorized pixel intensities ($\obsdim = 128^2 = 16384$). 
+Figure \ref{fig:fda-image-real} B, left column, shows a sample of $6$ inlier and $3$ structural outlier pictures, the right column shows embeddings of all $79$ images.
+Since the inlier data are images of a rotated object, $\Min$ is the image of a one-dimensional closed and circular parameter space defining the rotation angle [c.f. @ma2011manifold], i.e., other than in the ECG example substantial considerations yield at least some knowledge about the specific structure of the data manifold(s) in this case. 
+
+```{r fda-image-real, echo=FALSE, fig.height = 4.5, fig.cap = "\\label{fig:fda-image-real} Real functional and image data and their 2$\\vizdim$ tMDS embeddings. Numbered labels are ascending LOF score ranks of the outliers ($k = 0.75n$).", fig.pos = "!H"}
+# fig.height = 3.5
+source(here::here("R/exp_fda-ecg-data.R"))
+source(here::here("R/exp_image-coil.R"))
+
+plts_ecg <- plot_grid(plotlist = list(plt_funs_ecg, plt_emb_ecg), nrow = 1) 
+plts_coil <- plot_grid(plotlist = list(plt_pic_coil, plt_emb_coil), nrow = 1)
+plot_grid(plotlist = list(plts_ecg, plts_coil),
+          nrow = 2,
+          labels = "AUTO", hjust = -0.5, vjust = c(1.5, 1.5, 1.5, 1.5)) 
+```
+
+
+The 2$\vizdim$ embedding reflects the expected structure of our COIL20 subset very well, with clear separation of the $7$ pictures of the toy car as structural outliers. In addition, the embedding of $\Min$ indeed yields a closed, but not quite circular loop, as does the embedding of the 7 rotated images from $\Man$. The corresponding 3D embedding (not shown) reveals that the embeddings of the inliers lie on a rough circle folded over itself. 
+In summary, in the ECG example there seem to be no clearly separable, structurally different outliers which could be detected with tMDS, but only distributional outliers, whereas in the COIL data there are clearly separate structural outliers, but no distributionally outlying observations. These two examples with very different intrinsic structures (single connected manifold with distributional outliers versus disconnected manifolds without clear distributional outliers) illustrate that it is not necessary to have explicit prior knowledge about the data generating process or its outlier characteristics for the approach to work and that it is able to handle different data manifold structures flexibly and successfully.
+
+\subsubsection{Demonstrating generalizability on graph and curve data}
+
+Note that the COIL example illustrates that the framework also works in image data and that a fairly simplistic approach of computing $L_2$ distances between vectorized pixel intensities yields very reasonable results in this example.
+The framework is, however, not at all restricted to these two data types nor to such a simple distance metric. Recall that the approach can be applied to any data type whatsoever as long as a suitable distance metric is available. Beyond 1$\vizdim$ functional and image data, the framework can also be extended to more general and complex data types, for example graphs or 2$\vizdim$ curves as depicted in Figure \ref{fig:further-qual-exp}. We use more specialized distance measures to show that good results can also be obtained on such data.  
+We simulate two structurally different classes of Erd\H{o}s-Rényi graphs with 20 vertices (see Fig. \ref{fig:further-qual-exp} A). This structural difference results from different edge probabilities $p_v$ that two given vertices of the graph are connected, setting $p_{v} = 0.1$ for $\Min$ and $p_{v} = 0.4$ for $\Man$. We randomly sample $100$ observations from $\Min$ and $10$ from $\Man$, i.e. $r = 0.1$, and obtain a pairwise distance matrix by computing the Frobenius distances between the graph Laplacians.  
+
+```{r further-qual-exp, echo=FALSE, fig.height = 3.5, fig.cap = "\\label{fig:further-qual-exp} Curve and graph data as further examples to demonstrate the flexibility and general applicability of the approach, and their 2$\\vizdim$ MDS embeddings based on Frobenius (graphs) and Elastic shape distances (curves). Numbered labels are ascending LOF score ranks of the outliers ($k = 0.75n$)."}
+# fig.height = 3.5
+source(here::here("R/exp_graph-erdosrenyi.R"))
+source(here::here("R/exp_curves-parkinson.R"))
+
+plt_graphs <- ((wrap_plots(c(plts_net_in, plts_net_dis, plts_net_str), ncol = 3)))
+plts_graph <- plot_grid(plotlist = list(plt_graphs, plt_emb_erdr), 
+                        nrow = 1)
+plts_crvs <- plt_crvs + plt_emb_crvs + plot_layout(guides = "collect") & theme( legend.position = "none")
+plot_grid(plotlist = list(plts_graph, plts_crvs),
+          nrow = 2,
+          labels = "AUTO", hjust = -0.5, vjust = c(1.5, 1.5, 1.5, 1.5)) 
+
+
+# summary(max_degree)
+# max_degree[dist_outs]
+# 
+# summary(isolated_nodes)
+# isolated_nodes[dist_outs]
+```
+
+The curves data (Fig. \ref{fig:further-qual-exp} B) consists of spiral curve drawings from an Archimedes spiral-drawing test that is used to diagnose patients with Parkinson's disease [@steyer2021elastic; @alty2017use]. Taking data from the dynamic version of the test [@isenkul2014improved], we use 15 curves drawn by healthy controls not suffering from Parkinson's disease and two curves drawn by Parkinson patients to represent potential structural outliers, where each curve is evaluated on 200 points. Previous investigations have shown that an elastic shape distance is better suited than $L_2$ distances to discriminate between the two groups [@steyer2021elastic].  
+So, in contrast to the previous examples, we use more specialized distance measures to capture the relevant structures in these settings. This illustrates that the approach is not only flexible with respect to the actual structure present in a  given data set as demonstrated in the previous section, but that it is also very generally applicable to a variety of data types. The approach can be used for any kind of data simply by defining an appropriate (data-specific) distance measure.
+In  both the embeddings of the graphs as well as the embeddings of the curves, structurally different observations (in red) are clearly separated from the observations on $\Min$. This is also reflected by their LOF scores. Moreover, in both settings there are observations from $\Min$ (in blue) which appear in peripheral, sparser regions of the "normal" data and thus can be considered distributional outliers. 
+Note that it is not always immediately obvious on the level of the original data why observations appear distributionally outlying. For example, in the graph data, note that other than in previous examples (e.g. Fig. \ref{fig:exps-sim} A) comparing them to a few inliers does not reveal striking difference at first (in contrast to the structural outliers!): Figure \ref{fig:further-qual-exp} A, left column, shows six inlier graphs in the 1st and 2nd row, the three distributional outlier graphs in the 3rd row, and three structural outlier graphs in the 4th row.  
+Nevertheless, the embedding vectors and their LOF ranks indicate that the distributionally outlying observations have obtained some specific characteristics setting them apart from most inlying observations. For example, further analysis reveals that the graph with LOF rank 11 contains the node with maximum connectedness of all nodes in all inlier graphs. Its degree is 8 (i.e., it is directly connected to 8 other nodes), while the average of the maximum degree in the graphs on $\Min$ is just 4.39. In contrast, the graph with LOF rank 13 contains 8 isolated nodes of degree 0, while the average number of nodes with with degree 0 is only 2.47 on $\Min$. The respective values of the graph with LOF rank 10 are above the upper quartile for both of these metrics, with 4 unconnected nodes and a maximally connected node with degree 6.
+
+## Quantitative assessment \label{sec:exps:quant}
+
+In order to provide less subjective experimental results, we assess the approach quantitatively, using labeled data with at least two classes. For each data set, we consider four outlier ratios $r \in \{0.01, 0.025, 0.5, 0.1\}$. Setting one class as $\Min$, with $n_{in} = \vert \Min \vert$, and contaminating this "normal" class with $n_{out} = r \cdot n_{in}$ "structural" outliers from other classes, which form $\Man$, we obtain data sets $X \subset \Min \cup \Man$ with $n = n_{in} + n_{out}$. For each setting, we repeat the contamination process 50 times, sampling outliers at random from $\Man$. Based on outlier ranks computed with LOF, we use ROC-AUC as a performance measure and report the mean AUCs over the 50 replications for each combination of settings. Note that we only use the labels of the "structural" outliers for computing this performance measure, not for the unsupervised learning of the embeddings themselves.
+For all data sets considered in this section, plots of typical embeddings for $r = 0.05$ can be found in Figure \ref{fig:app} in the appendix. 
+We consider three additional functional data sets for this experiment: \textit{dodgers} [@dau2019ucr], a set of times series of daily traffic close to Dodgers Stadium, with days on weekends forming $\Man$ and weekdays forming $\Min$; \textit{phoneme} [@febrero2012fdausc], discretized log-periodograms of five different phonemes, with phoneme "dcl" forming $\Man$ and phonemes "sh", "iy", "aa", and "ao" forming $\Min$; \textit{starlight} [@dau2019ucr; @rebbapragada2009finding], phase-aligned light curves of Eclipsing Binary, Cepheid, and RR Lyrae stars, the first forming $\Man$ and the latter two forming $\Min$. All results are based on simple, linear tMDS/PCA embeddings with the LOF algorithm applied to the resulting 2$\vizdim$ embedding vectors.  
+The results show that outlier detection does not need to be specifically challenging in nominally high dimensional data. In each of the data sets, which have very different number of observations and number of dimensions, high ROC-AUC $\geq 0.95$ can be achieved for all considered outlier ratios $r$. This indicates that most of the observations from $\Man$ indeed appear to be outlying in the embedding space and thus obtain high LOF scores. Furthermore, as in the qualitative analysis, a global setting of $k = 0.75n$ seems to be a reasonable default for the LOF algorithm. Only for $r = 0.01, 0.025$ in the starlight data,
+we see a large improvement (AUC $= 1.00$) with $k = 0.1n$. For small $r < 0.1$, in all other settings the achieved ROC-AUC is very robust against changes in this tuning parameter.
+
+\begin{table}
+\scriptsize
+\caption{\label{tab:real-quant}Mean ROC-AUC values over 50 replications based on the ranks as assigned by LOF. Each data set consists of $n$ observations, $n_{in}$ from $\Min$ and $n_{out} = n_{in} \cdot r$ from $\Man$. $\Man$ and $\Min$ are defined by classes of the original labeled data sets. $D$ is the dimensionality of a data set (i.e, evaluations per function for functional data) and $k$ the number of nearest neighbors used in the LOF algorithm.}
+\centering
+\resizebox{\textwidth}{!}{\begin{tabular}{@{}lcccccrccccrcccc@{}} \toprule
+\textbf{} & & \multicolumn{4}{c}{dodgers} & & \multicolumn{4}{c}{phoneme} & & \multicolumn{4}{c}{starlight} \\
+ & & \multicolumn{4}{c}{$n_{in} = 97$, $\obsdim = 289$} & & \multicolumn{4}{c}{$n_{in} = 400$, $\obsdim = 150$} & & \multicolumn{4}{c}{$n_{in} = 6656$, $\obsdim = 1025$} \\
+\cmidrule{3-6} \cmidrule{8-11} \cmidrule{13-16}
+ & $k$       & $0.01n$ & $0.1n$ & $0.75n$ & $0.9n$ & & $0.01n$ & $0.1n$ & $0.75n$ & $0.9n$ & & $0.01n$ & $0.1n$ & $0.75n$ & $0.9n$ \\  \midrule
+$r: 1.0\%$ & & 0.78 & 0.98 & 0.96 & 0.96 & & 0.78 & 1.00 & 0.99 & 0.99 & & 0.96 & 1.00 & 0.69 & 0.78 \\
+$r: 2.5\%$ & & 0.62 & 0.97 & 0.96 & 0.96 & & 0.54 & 1.00 & 0.99 & 0.99 & & 0.55 & 1.00 & 0.88 & 0.88 \\
+$r: 5.0\%$ & & 0.59 & 0.97 & 0.96 & 0.96 & & 0.56 & 0.99 & 0.99 & 0.99 & & 0.53 & 1.00 & 0.92 & 0.92 \\
+$r: 10\%$  & & 0.54 & 0.84 & 0.97 & 0.96 & & 0.57 & 0.75 & 0.99 & 0.99 & & 0.56 & 0.98 & 0.95 & 0.87\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
