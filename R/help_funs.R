@@ -1,55 +1,3 @@
-outdetect <- function(dat, B = 50, param = seq(0.01, 5, length.out = 50)) {
-  count <- 1
-
-  opt_mod <- vector("list", B)
-  perf <- vector("list", B * length(param))
-
-  task <- makeOneClassTask(data = data.frame(V1 = dat$emb[, 1],
-                                             V2 = dat$emb[, 2],
-                                             target = as.factor(dat$lbls)),
-                           target = "target",
-                           positive = "1",
-                           negative = "0")
-  AMV = makeAMVMeasure(id = "AMV", minimize = TRUE, alphas = c(0.7, 0.99), n.alpha = 20, n.sim = 10e3, best = 0, worst = NULL)
-
-  for (i in seq_len(B)) {
-    inds.split = BBmisc::chunk(seq_len(nrow(dat$dat)), shuffle = TRUE, props = c(0.8, 0.2))
-    train.inds = inds.split[[1]]
-    test.inds = inds.split[[2]]
-
-    par_count <- 1
-    for (par in param) {
-      lrn = makeLearner("oneclass.svm", predict.type = "prob", gamma = par)
-      temp_mod = train(lrn, task, subset = train.inds)
-      pred = predict(temp_mod, task, subset = test.inds)
-
-      perf[[count]] <- performance(pred = pred, measures = list(AMV, f1, auc), model = temp_mod, task = task)
-      if (par_count == 1) {
-        opt_mod[[i]] <- temp_mod
-      } else if (perf[[par_count]]["AMV"] < perf[[par_count - 1]]["AMV"]) {
-        opt_mod[[i]] <- temp_mod
-      }
-      count <- count + 1
-      par_count <- par_count + 1
-    }
-  }
-  list("mod" = opt_mod, "perf" = perf)
-}
-
-d_dist <- function(mat, a = 0.5, grid, d_only = TRUE) {
-
-  derivs <- t(apply(mat, 1, function(f) my_deriv(grid = grid, vals = f)))
-
-  dfuns <- dist(mat)
-  dders <- dist(derivs)
-
-  a * as.matrix(dfuns) + (1 - a) * as.matrix(dders)
-}
-
-my_deriv = function(grid, vals){
-  diff(vals)/diff(grid)
-}
-
 #' Compute distances from graph laplacian's
 #' @param grs list of graphs
 #' @param file File to dump to usign saveRDS. NULL: Do not save
@@ -122,3 +70,147 @@ load_mnist <- function() {
   train$y <<- load_label_file('data/train-labels-idx1-ubyte')
   test$y <<- load_label_file('data/t10k-labels-idx1-ubyte')
 }
+
+
+## misc
+#' @export
+plot_funs <- function(data, ...) {
+  UseMethod("plot_funs")
+}
+
+
+# default function for data in fundata in matrix format
+#' @export
+plot_funs.default <- function(data, col = NULL, args = NULL, ...) {
+  n <- nrow(data)
+  grid_len <- ncol(data)
+  df_dat <- data.frame(
+    args = if (is.null(args)) rep(1:grid_len, n) else args,
+    vals = c(t(data)),
+    id = as.factor(rep(1:n, each = grid_len))
+  )
+
+  if (!is.null(col)) df_dat$col <- rep(col, each = grid_len)
+
+  ggplot(df_dat) +
+    geom_line(aes(x = args,
+                  y = vals,
+                  group = id,
+                  colour = if (is.null(col)) {id} else {col}),
+              ...) +
+    theme(legend.position = "None")
+}
+
+## embedding
+embed <- function(dist_mat, method = c("isomap", "umap", "diffmap", "mds", "tsne"), ...) {
+  method <- match.arg(method, c("isomap", "umap", "diffmap", "mds", "tsne"))
+
+  # change to assert: accept only matrices?
+  if (inherits(dist_mat, "dist")) dist_mat <- as.matrix(dist_mat)
+
+  emb <-
+    switch(
+      method,
+      "isomap" = vegan::isomap(dist_mat, ...),
+      "umap" = umap::umap(dist_mat, input = "dist", ...),
+      "diffmap" =  diffuse2(dist_mat, ...),
+      "mds" = cmdscale(dist_mat, ...),
+      "tsne" = Rtsne::Rtsne(dist_mat, is_distance = TRUE, ...)
+    )
+
+  if (method == "tsne") class(emb) <- "tsne"
+
+  emb
+}
+
+
+# help fun S3 class to extract embedding coordinates
+#' @export
+extract_points <- function(x, ...) {
+  UseMethod("extract_points")
+}
+
+# S3 method for isomap
+#' @export
+extract_points.isomap <- function(embedding, ndim = dim(embedding$points)[2]) {
+  embedding$points[, 1:ndim, drop = FALSE]
+}
+
+# S3 method for umap
+#' @export
+extract_points.umap <- function(embedding, ndim = dim(embedding$layout)[2]) {
+  embedding$layout[, 1:ndim, drop = FALSE]
+}
+
+# S3 method for diffusionMap
+#' @export
+extract_points.diffuse <- function(embedding, ndim = dim(embedding$X)[2]) {
+  embedding$X[, 1:ndim, drop = FALSE]
+}
+
+# S3 method for matrix output, e.g. mds
+#' @export
+extract_points.matrix <- function(embedding, ndim = dim(embedding)[2]) {
+  embedding[, 1:ndim, drop = FALSE]
+}
+
+# S3 method for tsne
+#' @export
+extract_points.tsne <- function(embedding, ndim = dim(embedding$Y)[2]) {
+  embedding$Y[, 1:ndim, drop = FALSE]
+}
+
+
+## plotting
+# function to plot embeddings
+#' @export
+plot_emb <- function(embedding, ...) {
+  UseMethod("plot_emb")
+}
+
+# default method for embedding data in 2d matrix format
+#' @export
+plot_emb.default <- function(pts, color = NULL, size = 1, ...) {
+
+  dat <- data.frame(dim1 = pts[, 1],
+                    dim2 = pts[, 2],
+                    color = 1:nrow(pts))
+
+  if (!is.null(color)) dat$color <- color
+
+  p <- ggplot(dat) +
+    geom_point(aes(x = dim1,
+                   y = dim2,
+                   colour = color),
+               size = size) +
+    theme(legend.position = "Non") +
+    ggtitle(label = "2d-embedding")
+  p
+}
+
+#' @export
+plot_emb.matrix <- function(embedding, color = NULL, labels_off = TRUE, labels = NULL, size = 1, ...) {
+  # TODO argument checking (min 2-d data, etc)
+
+  pts <- extract_points(embedding, 2)
+  p <- plot_emb.default(pts, color = color, labels = labels, size = size, ...)
+  if (!labels_off) p <- if (is.null(labels)) {
+    p + ggrepel::geom_text_repel(aes(x = dim1, y = dim2, label = 1:nrow(pts)), size = label_size)
+  } else {
+    p + ggrepel::geom_text_repel(aes(x = dim1, y = dim2, label = labels), size = label_size)
+  }
+  p
+}
+
+# for objects of class embedding
+#' @export
+plot_emb.embedding <- function(embedding, color = NULL, labels = FALSE, size = 1) {
+  # TODO argument checking (min 2-d data, etc)
+
+  emb <- embedding$emb
+  pts <- extract_points(emb, 2)
+  p <- plot_emb.default(pts, color = color, labels = labels, size = size, ...)
+  if (labels) p <- p + ggrepel::geom_text_repel(aes(x = dim1, y = dim2, label = 1:nrow(pts)))
+  p
+}
+

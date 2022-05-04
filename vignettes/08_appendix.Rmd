@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-if (Sys.info()["user"] != "fabians") {
-  devtools::load_all("~/projects/manifun")
-  devtools::load_all("~/projects/simfun")
-} else {
-  devtools::load_all("~/fda/manifun")
-  devtools::load_all("~/fda/simfun")
-}
+# if (Sys.info()["user"] != "fabians") {
+#   devtools::load_all("~/projects/manifun")
+#   devtools::load_all("~/projects/simfun")
+# } else {
+#   devtools::load_all("~/fda/manifun")
+#   devtools::load_all("~/fda/simfun")
+# }
 
 library(data.table)
 library(fda)

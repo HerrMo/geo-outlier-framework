@@ -41,16 +41,16 @@ knitr::opts_chunk$set(
 )
 
 src_pth <- here::here()
-if (Sys.info()["user"] != "fabians") {
-  devtools::load_all("~/projects/manifun")
-  devtools::load_all("~/projects/simfun")
-} else if (Sys.info()["user"] == "flo") {
-  devtools::load_all("~/Documents/repos/manifun")
-  devtools::load_all("~/Documents/repos/simfun")
-} else {
-  devtools::load_all("~/fda/manifun")
-  devtools::load_all("~/fda/simfun")
-}
+# if (Sys.info()["user"] != "fabians") {
+#   devtools::load_all("~/projects/manifun")
+#   devtools::load_all("~/projects/simfun")
+# } else if (Sys.info()["user"] == "flo") {
+#   devtools::load_all("~/Documents/repos/manifun")
+#   devtools::load_all("~/Documents/repos/simfun")
+# } else {
+#   devtools::load_all("~/fda/manifun")
+#   devtools::load_all("~/fda/simfun")
+# }
 
 library(data.table)
 library(fda)
@@ -64,6 +64,7 @@ library(pROC)
 library(cowplot)
 library(latex2exp)
 library(patchwork)
+source(here::here("R/help_funs.R"))
 
 reps <- 1:50
 ratios <- c(0.01, 0.025, 0.05, 0.1)
@@ -98,7 +99,6 @@ theme = theme_minimal() +
 
 theme_set(theme)
 ```
-
 
 ```{r child = '01_introduction.Rmd'}
 ```

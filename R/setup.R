@@ -8,12 +8,12 @@ library(StatPerMeCo)
 library(pROC)
 library(cowplot)
 library(latex2exp)
-library(classiFunc)
+# library(classiFunc)
 library(kableExtra)
 library(patchwork)
 library(GGally)
 
-devtools::load_all("~/projects/manifun")
+# devtools::load_all("~/projects/manifun")
 
 reps <- 1:50
 ratios <- c(0.01, 0.025, 0.05, 0.1)

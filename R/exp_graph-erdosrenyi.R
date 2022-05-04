@@ -69,10 +69,10 @@ plts_net_str <-
 ## Further analysis
 dist_outs <- which(out_ranks %in% c(11, 10, 13))
 
-max_degree <- sapply(lap_004, function(x) max(diag(x)))
+max_degree <- sapply(lap_004, function(x) max(diag(as.matrix(x))))
 summary(max_degree)
 max_degree[dist_outs]
 
-isolated_nodes <- sapply(lap_004, function(x) sum(diag(x == 0)))
+isolated_nodes <- sapply(lap_004, function(x) sum(diag(as.matrix(x)) == 0))
 summary(isolated_nodes)
 isolated_nodes[dist_outs]
